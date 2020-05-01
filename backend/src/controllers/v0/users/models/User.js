@@ -5,8 +5,9 @@ import  { Sequelize, Model, DataTypes } from 'sequelize';
 class User extends Model {}
 User.init({
   username: DataTypes.STRING,
-  age: DataTypes.INTEGER,
-  weight: DataTypes.FLOAT,
-  height: DataTypes.FLOAT
+  email: DataTypes.TEXT,
+  phonenumber: DataTypes.STRING,
+  goal: DataTypes.INTEGER,
+  reminder: DataTypes.BOOLEAN
 });
 

@@ -1,4 +1,4 @@
-This is an exercise tracker app with inspiration from similar project by Freecodecamp.
+This is an exercise tracker app with inspiration from project by Freecodecamp.
 This app has these features:
 User can signup/loggin
 signup
