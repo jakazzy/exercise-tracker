@@ -1,4 +1,5 @@
 import  { Sequelize, Model, DataTypes } from 'sequelize';
+import { Exercise } from '../../exercises/models/Exercise'
 // const { Sequelize, Model, DataTypes } = require('sequelize');
 
 
@@ -37,4 +38,4 @@ User.init({
 });
 
 
-    
+User.hasMany(Exercise)
