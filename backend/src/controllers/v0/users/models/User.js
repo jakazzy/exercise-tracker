@@ -4,10 +4,37 @@ import  { Sequelize, Model, DataTypes } from 'sequelize';
 
 class User extends Model {}
 User.init({
-  username: DataTypes.STRING,
-  email: DataTypes.TEXT,
-  phonenumber: DataTypes.STRING,
-  goal: DataTypes.INTEGER,
-  reminder: DataTypes.BOOLEAN
+  username:{ 
+    type: DataTypes.TEXT,
+    allowNull: false,
+    unique: true,
+    validate: {
+      notNull: {
+        msg: 'Please enter your name'
+      }
+    }
+  },
+  email: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+    validate: {
+      isEmail: true,
+      notNull: {
+        msg: 'Please enter your email'
+      }
+    }
+  },
+  phonenumber: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  goal: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  reminder: {type: DataTypes.BOOLEAN,
+  allowNull: true}
 });
 
+
+    
