@@ -1,13 +1,24 @@
 import 'dotenv/config';
 // import cors from 'cors';
+import { sequelize} from './sequelize'
 import express from 'express';
 import { IndexRouter } from './controllers/v0/index.router'
 import { V0MODELS } from './controllers/v0/model.index'
+// import users from './users.json'
+const _users = require('./users.json')
 
 
 (async ()=>{
-    await sequelize.addModels(V0MODELS)
-    await sequelize.sync()
+    try{
+        await sequelize.addModels(V0MODELS)
+        await sequelize.sync({
+            force: true,
+            logging: console.log
+        })
+    }catch( error){
+        console.log('connection to database failed', error)
+    }
+  
 
     const app = express()
     const port = process.env.PORT || 8080
