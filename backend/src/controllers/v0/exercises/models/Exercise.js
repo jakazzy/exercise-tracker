@@ -8,3 +8,4 @@ Exercise.init({
   duration: DataTypes.INTEGER
 });
 
+Exercise.belongsTo(User)
