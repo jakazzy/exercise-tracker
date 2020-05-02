@@ -31,17 +31,13 @@ User.init({
     type: DataTypes.STRING,
     allowNull: true
   },
-  goal: {
-    type: DataTypes.INTEGER,
-    allowNull: true
-  },
-  reminder: {type: DataTypes.BOOLEAN,
-  allowNull: true}
-}
-,{
-  sequelize,
-  modelName: 'User'
-}
+  goal: DataTypes.INTEGER,
+  reminder: DataTypes.BOOLEAN
+},
+  {
+    sequelize,
+    modelName: 'User'
+  }
 );
 
 

@@ -42,7 +42,7 @@ router.post('/', async(req, res)=>{
     
     })
     
-router.get('/', async(req, res)=>{})
+// router.get('/', async(req, res)=>{})
 router.get('/:id', async(req, res) => {
     let { id } = req.params;
     const item = await User.findByPk(id)
