@@ -16,14 +16,14 @@ router.post('/', async(req, res)=>{
     if( !email){
         return res.status(422).send({auth:false, message: "Email  cannot be null"})
     }
-    
+
     const user = await User.findByPk(username)
     if(user){
         return res.status(422).send({auth:false, message: "User may already exist"})
     }
 
-
-    const newUser = await new User({
+    try{
+    const newUser =  new User({
         username: username,
         age: age,
         weight: weight,
@@ -31,9 +31,10 @@ router.post('/', async(req, res)=>{
     })
  
     let savedUser;
-    try{
+   
      savedUser = await newUser.save()
     }catch(e){
+        console.log('are you the error', e)
         throw e
     }
  

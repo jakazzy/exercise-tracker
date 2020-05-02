@@ -16,17 +16,18 @@ router.post('/', async(req, res)=>{
     }
     
    
+    try{
 
-
-    const newExercise = await new Exercise({
+    const newExercise = new Exercise({
         description,
         duration
     })
  
     let savedExercise;
-    try{
+    
         savedExercise = await newExercise.save()
     }catch(e){
+        console.log('is this the error', e)
         throw e
     }
  
