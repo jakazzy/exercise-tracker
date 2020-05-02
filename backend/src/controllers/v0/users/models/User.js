@@ -1,9 +1,10 @@
 import  { Sequelize, Model, DataTypes } from 'sequelize';
 import { Exercise } from '../../exercises/models/Exercise'
+import {sequelize} from './../../../../sequelize'
 // const { Sequelize, Model, DataTypes } = require('sequelize');
 
 
-class User extends Model {}
+export class User extends Model {}
 User.init({
   username:{ 
     primaryKey: true,
@@ -36,7 +37,12 @@ User.init({
   },
   reminder: {type: DataTypes.BOOLEAN,
   allowNull: true}
-});
+}
+,{
+  sequelize,
+  modelName: 'User'
+}
+);
 
 
 User.hasMany(Exercise)

@@ -3,14 +3,14 @@ import 'dotenv/config';
 import { sequelize} from './sequelize'
 import express from 'express';
 import { IndexRouter } from './controllers/v0/index.router'
-import { V0MODELS } from './controllers/v0/model.index'
+// import { V0MODELS } from './controllers/v0/model.index'
 // import users from './users.json'
-const _users = require('./users.json')
+// const _users = require('./users.json')
 
 
 (async ()=>{
     try{
-        await sequelize.addModels(V0MODELS)
+        // await sequelize.addModels(V0MODELS)
         await sequelize.sync({
             force: true,
             logging: console.log

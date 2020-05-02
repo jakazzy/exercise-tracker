@@ -1,11 +1,16 @@
 import  { Sequelize, Model, DataTypes } from 'sequelize';
-// const { Sequelize, Model, DataTypes } = require('sequelize');
+import {sequelize} from './../../../../sequelize'
 // import { User } from './../../users/models/User'
 
-class Exercise extends Model {}
+export class Exercise extends Model {}
 Exercise.init({
   description: DataTypes.TEXT,
   duration: DataTypes.INTEGER
-});
+}
+,{
+  sequelize,
+  modelName: 'Exercise'
+}
+);
 
 // User.hasMany(Exercise)
