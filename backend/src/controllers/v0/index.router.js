@@ -13,12 +13,3 @@ router.get('/', async(req, res)=>{
 
 export const IndexRouter = router
 
-// {
-// 	"username": "deborah",
-// 	"email": "dompe@gmail.com",
-// 	"phonenumber": "+233556878087",
-// 	"goal": 255,
-//   "reminder": true,
-// 	"createdAt": "25-11-19",
-// 	"updatedAt": "26-12-2020"
-// }
