@@ -24,21 +24,22 @@ router.post('/', async(req, res)=>{
 
     try{
     const newUser =  new User({
-        username: username,
-        age: age,
-        weight: weight,
-        height: height
+       
+	username: username,
+	email: email,
+	phonenumber: phonenumber,
+	goal: goal,
+  reminder: reminder
     })
  
-    let savedUser;
-   
-     savedUser = await newUser.save()
+    let savedUser = await newUser.save()
+    return res.status(201).send({ user: savedUser})
     }catch(e){
         console.log('are you the error', e)
         throw e
     }
  
-    return res.status(201).send({ user: savedUser})
+    
     
     })
     
