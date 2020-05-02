@@ -5,13 +5,18 @@ const router = Router()
 
 router.post('/', async(req, res)=>{
     const username = req.body.username;
-    const age = req.body.age;
-    const weight = req.body.weight;
-    const height =  req.body.height
+    const email = req.body.email;
+    const phonenumber = req.body.phonenumber;
+    const goal =  req.body.goal;
+    const reminder = req.body.reminder
 
     if( !username){
         return res.status(422).send({auth:false, message: "Username  cannot be null"})
     }
+    if( !email){
+        return res.status(422).send({auth:false, message: "Email  cannot be null"})
+    }
+    
     const user = await User.findByPk(username)
     if(user){
         return res.status(422).send({auth:false, message: "User may already exist"})

@@ -6,6 +6,7 @@ import { Exercise } from '../../exercises/models/Exercise'
 class User extends Model {}
 User.init({
   username:{ 
+    primaryKey: true,
     type: DataTypes.TEXT,
     allowNull: false,
     unique: true,
