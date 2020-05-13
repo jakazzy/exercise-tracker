@@ -1,15 +1,15 @@
-import { Router} from 'express'
-import { ExerciseRouter } from './exercises/routes/exercise.router'
-import { UserRouter } from './users/routes/user.router'
+import { Router} from 'express';
+import { ExerciseRouter } from './exercises/routes/exercise.router';
+import { UserRouter } from './users/routes/user.router';
 
-const router = Router()
+const router = Router();
 
-router.use('/exercise', ExerciseRouter)
-router.use('/users', UserRouter)
+router.use('/exercise', ExerciseRouter);
+router.use('/users', UserRouter);
 
-router.get('/', async(req, res)=>{
-    res.send('V0')
-})
+router.get('/', async(req, res) => {
+  res.send('V0');
+});
 
-export const IndexRouter = router
+export const IndexRouter = router;
 

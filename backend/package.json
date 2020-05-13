@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --exec babel-node src/index.js",
-    "pretest": "eslint --ignore-path .gitignore ."
+    "posttest": "eslint --ignore-path .gitignore .",
+    "fix": "npm run posttest -- --fix"
   },
   "repository": {
     "type": "git",
@@ -31,7 +32,9 @@
     "@babel/core": "^7.9.0",
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.9.5",
+    "babel-eslint": "^10.1.0",
     "eslint": "^7.0.0",
-    "eslint-config-strongloop": "^2.1.0"
+    "eslint-config-strongloop": "^2.1.0",
+    "prettier": "^2.0.5"
   }
 }

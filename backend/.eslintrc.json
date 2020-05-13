@@ -1,1 +1,2 @@
-{"extends": "strongloop"}
+{"extends": "strongloop",
+"parser": "babel-eslint"}
