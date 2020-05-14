@@ -6,6 +6,7 @@ const router = Router();
 router.post('/', async(req, res) => {
   const username = req.body.username;
   const email = req.body.email;
+  const hashedpassword = req.body.hashedpassword;
   const phonenumber = req.body.phonenumber;
   const goal = req.body.goal;
   const reminder = req.body.reminder;
@@ -16,8 +17,11 @@ router.post('/', async(req, res) => {
   if (!email){
     return res.status(422).send({auth: false, message: 'Email cannot be null'});
   }
+  if (!hashedpassword){
+    return res.status(422).send({auth: false, message: 'Email cannot be null'});
+  }
 
-  const user = await User.findByPk(username);
+  const user = await User.findByPk(email);
   if (user){
     return res.status(422).send({auth: false, message: 'User already exist'});
   }
@@ -27,6 +31,7 @@ router.post('/', async(req, res) => {
 
       username: username,
       email: email,
+      hashedpassword: hashedpassword,
       phonenumber: phonenumber,
       goal: goal,
       reminder: reminder,

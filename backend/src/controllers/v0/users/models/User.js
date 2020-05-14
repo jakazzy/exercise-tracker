@@ -30,7 +30,7 @@ User.init({
   },
 
   hashedpassword: {
-    type: DataTypes.STRING(64),
+    type: DataTypes.STRING(8),
     allowNull: false,
     is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/},
 
@@ -56,3 +56,14 @@ User.hasMany(Exercise);
 // Minimum eight characters, at least one uppercase letter,
 // one lowercase letter, one number and one special character:
 // "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+
+// {
+//   "user": {
+//     "username": "deborah",
+//     "email": "dompe@gmail.com",
+//     "phonenumber": "+233556878087",
+//     "goal": 255,
+//     "reminder": true,
+//     "updatedAt": "2020-05-02T09:34:48.872Z",
+//     "createdAt": "2020-05-02T09:34:48.872Z"
+//   }
