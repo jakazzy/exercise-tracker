@@ -1,4 +1,4 @@
-import { Sequelize, Model, DataTypes } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import { Exercise } from '../../exercises/models/Exercise';
 import {sequelize} from './../../../../sequelize';
 // const { Sequelize, Model, DataTypes } = require('sequelize');
@@ -7,8 +7,7 @@ import {sequelize} from './../../../../sequelize';
 export class User extends Model {}
 User.init({
   username: {
-    primaryKey: true,
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true,
     validate: {
@@ -18,8 +17,10 @@ User.init({
     },
   },
   email: {
-    type: DataTypes.TEXT,
+    primaryKey: true,
+    type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
     validate: {
       isEmail: true,
       notNull: {
@@ -27,6 +28,12 @@ User.init({
       },
     },
   },
+
+  hashedpassword: {
+    type: DataTypes.STRING(64),
+    allowNull: false,
+    is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/},
+
   phonenumber: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -42,3 +49,10 @@ User.init({
 
 
 User.hasMany(Exercise);
+
+// Reference: Stackoverflow
+// https://stackoverflow.com/questions/19605150/regex-for-
+// password-must-contain-at-least-eight-characters-at-least-one-number-a
+// Minimum eight characters, at least one uppercase letter,
+// one lowercase letter, one number and one special character:
+// "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
