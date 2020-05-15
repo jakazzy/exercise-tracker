@@ -69,3 +69,34 @@ router.post('/', async(req, res) => {
 
 console.log(comparePasswords, jwt, check, validationResult,
   generatePasswords, config)
+
+// login new users
+router.post('/login', async(req, res) => {
+  console.log(req, res)
+  const email = req.body.email
+  const hashedpassword = req.body.hashedpassword
+
+  if (!email){
+    res.status(400).send({ auth: false, message: 'email is required'})
+  }
+
+  if (!hashedpassword){
+    res.status(400).send({auth: false, message: 'password is required'})
+  }
+
+  const user = await User.findByPk(email)
+  if (!user){
+    res.status(401).send({ auth: false, message: 'unauthorized'})
+  }
+
+  const authValid = await comparePasswords(hashedpassword, user.hashedpassword)
+
+  if (!authValid){
+    res.status(401).send({ auth: false, message: 'unauthorized'})
+  }
+
+  const jwt = generateJWT(user)
+  res.status(200).send({ token: jwt, auth: false, user: user})
+})
+
+export const AuthRouter = router
