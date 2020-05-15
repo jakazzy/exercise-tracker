@@ -32,7 +32,7 @@ router.post('/', async(req, res) => {
     return res.status(422).send({auth: false, message: 'Email cannot be null'});
   }
   if (!hashedpassword){
-    return res.status(422).send({auth: false, message: 'Email cannot be null'});
+    return res.status(422).send({auth: false, message: 'Password cannot be null'});
   }
   const user = await User.findByPk(email);
   if (user){
