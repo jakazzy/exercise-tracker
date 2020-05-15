@@ -1,2 +1,6 @@
 {"extends": "strongloop",
-"parser": "babel-eslint"}
+"parser": "babel-eslint",
+"rules": {
+    "no-trailing-spaces":"off",
+    "semi":"off"
+  }}
