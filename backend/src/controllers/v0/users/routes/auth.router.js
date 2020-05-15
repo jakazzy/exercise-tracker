@@ -17,6 +17,10 @@ async function generatePasswords(plainTextPassword){
   return await bcrypt.hash(plainTextPassword, salt)
 }
 
+function generateJWT(user){
+  return jwt.sign(user.toJSON(), config.dev.jwt.secret)
+}
+
 // Register new users
 router.post('/', async(req, res) => {
   const username = req.body.username;
@@ -55,7 +59,8 @@ router.post('/', async(req, res) => {
       reminder: reminder,
     });
     let savedUser = await newUser.save();
-    return res.status(201).send({ user: savedUser});
+    const jwt = generateJWT(savedUser)
+    return res.status(201).send({ token: jwt, user: savedUser});
   } catch (e){
     console.log('are you the error', e);
     throw e;
