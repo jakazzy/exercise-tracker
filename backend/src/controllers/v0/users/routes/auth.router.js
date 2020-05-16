@@ -114,8 +114,8 @@ router.post('/login', async(req, res) => {
   if (!user){
     res.status(401).send({ auth: false, message: 'unauthorized'})
   }
-
-  const authValid = await comparePasswords(hashedpassword, user.hashedpassword)
+  const pwd = user.hashedpassword
+  const authValid = await comparePasswords(hashedpassword, pwd)
 
   if (!authValid){
     res.status(401).send({ auth: false, message: 'unauthorized'})
