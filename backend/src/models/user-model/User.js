@@ -1,6 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
-import { Exercise } from '../../exercises/models/Exercise';
-import {sequelize} from './../../../../sequelize';
+import { Exercise } from '../exercise-model/Exercise';
+import {sequelize} from '../../sequelize';
 // const { Sequelize, Model, DataTypes } = require('sequelize');
 
 

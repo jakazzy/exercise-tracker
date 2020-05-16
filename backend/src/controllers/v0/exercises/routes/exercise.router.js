@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Exercise } from '../models/Exercise';
+import { Exercise } from '../../../../models/exercise-model/Exercise';
 import { requireAuth } from '../../users/routes/auth.router'
 
 const router = Router();
