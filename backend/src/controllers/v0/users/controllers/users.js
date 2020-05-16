@@ -18,25 +18,6 @@ function generateJWT(user){
   return jwt.sign(user.toJSON(), config.dev.jwt.secret)
 }
 
-export function requireAuth(req, res, next){
-  if (!req.headers || !req.headers.authorization){
-    res.status(401).send({message: 'No authorization headers'})
-  }
-  const token_bearer = req.headers.authorization.split('')
-  if (token_bearer.length !== 2){
-    res.status(402).send({ messade: 'Malformed token'})
-  }
-  
-  const token = token_bearer[1]
-  return jwt.verify(token, config.dev.jwt.secret, (err, decoded) => {
-    if (err){
-      return res.status(500)
-        .send({auth: false, message: 'Failed to authenticate'})
-    }
-    return next()
-  })
-  
-}
 
 export default {
   create: async(req, res) => {
@@ -115,6 +96,26 @@ export default {
   
     const jwt = generateJWT(user)
     res.status(200).send({ token: jwt, auth: false, user: user})
+  },
+
+  requireAuth: async(req, res, next) => {
+    if (!req.headers || !req.headers.authorization){
+      res.status(401).send({message: 'No authorization headers'})
+    }
+    const token_bearer = req.headers.authorization.split('')
+    if (token_bearer.length !== 2){
+      res.status(402).send({ messade: 'Malformed token'})
+    }
+    
+    const token = token_bearer[1]
+    return jwt.verify(token, config.dev.jwt.secret, (err, decoded) => {
+      if (err){
+        return res.status(500)
+          .send({auth: false, message: 'Failed to authenticate'})
+      }
+      return next()
+    })
+    
   },
   resetPassword: () => {},
 }

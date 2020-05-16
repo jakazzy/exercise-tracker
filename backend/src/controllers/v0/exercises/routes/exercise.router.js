@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { Exercise } from '../../../../models/exercise-model/Exercise';
-import { requireAuth } from '../../users/routes/auth.router'
+import users from './../../users/controllers/users'
 
 const router = Router();
 
@@ -33,7 +33,7 @@ router.post('/', async(req, res) => {
 
 });
 
-router.get('/', requireAuth, async(req, res) => {
+router.get('/', users.requireAuth, async(req, res) => {
   const items = await Exercise.findAndCountAll({order: [['id', 'DESC']]});
   return res.status(201).send(items);
 });
