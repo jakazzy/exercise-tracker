@@ -21,6 +21,30 @@ function generateJWT(user){
   return jwt.sign(user.toJSON(), config.dev.jwt.secret)
 }
 
+export function requireAuth(req, res, next){
+  if (!req.headers || !req.headers.authorization){
+    res.status(401).send({message: 'No authorization headers'})
+  }
+  const token_bearer = req.headers.authorization.split('')
+  if (token_bearer.length !== 2){
+    res.status(402).send({ messade: 'Malformed token'})
+  }
+
+  const token = token_bearer[1]
+  return jwt.verify(token, config.dev.jwt.secret, (err, decoded) => {
+    if (err){
+      return res.status(500)
+        .send({auth: false, message: 'Failed to authenticate'})
+    }
+    return next()
+  })
+
+}
+
+router.get('/verification', requireAuth, async(req, res) => {
+  return res.status(200).send({ auth: true, message: 'Authenticated'})
+})
+
 // Register new users
 router.post('/', async(req, res) => {
   const username = req.body.username;
