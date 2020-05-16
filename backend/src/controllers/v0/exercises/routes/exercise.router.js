@@ -5,19 +5,18 @@ import users from './../../users/controllers/users'
 const router = Router();
 
 router.post('/', async(req, res) => {
-  const description = req.body.description;
-  const duration = req.body.duration;
-
-
-  if (!description){
-    return res.status(422).send({message: 'Description  cannot be null'});
-  }
-  if (!duration){
-    return res.status(422).send({ message: 'Duration  cannot be null'});
-  }
-
-
   try {
+    const description = req.body.description;
+    const duration = req.body.duration;
+
+
+    if (!description){
+      return res.status(422).send({message: 'Description  cannot be null'});
+    }
+    if (!duration){
+      return res.status(422).send({ message: 'Duration  cannot be null'});
+    }
+  
 
     const newExercise = new Exercise({
       description,
