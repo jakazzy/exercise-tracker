@@ -47,32 +47,34 @@ router.get('/verification', requireAuth, async(req, res) => {
 
 // Register new users
 router.post('/', async(req, res) => {
-  const username = req.body.username;
-  const email = req.body.email;
-  const hashedpassword = req.body.hashedpassword;
-  const phonenumber = req.body.phonenumber;
-  const goal = req.body.goal;
-  const reminder = req.body.reminder;
-
-  const user = await User.findByPk(email);
-  const password = generatePasswords(hashedpassword)
-
-  if (!username){
-    return res.status(422).send({auth: false, message: 'Username is required'});
-  }
-  if (!email){
-    return res.status(422).send({auth: false, message: 'Email is required'});
-  }
-  if (!hashedpassword){
-    return res.status(422)
-      .send({auth: false, message: 'Password is required'});
-  }
-
-  if (user){
-    return res.status(422).send({auth: false, message: 'User already exist'});
-  }
 
   try {
+    const username = req.body.username;
+    const email = req.body.email;
+    const hashedpassword = req.body.hashedpassword;
+    const phonenumber = req.body.phonenumber;
+    const goal = req.body.goal;
+    const reminder = req.body.reminder;
+
+    const user = await User.findByPk(email);
+    const password = await generatePasswords(hashedpassword)
+
+    if (!username){
+      return res.status(422)
+        .send({auth: false, message: 'Username is required'});
+    }
+    if (!email){
+      return res.status(422).send({auth: false, message: 'Email is required'});
+    }
+    if (!hashedpassword){
+      return res.status(422)
+        .send({auth: false, message: 'Password is required'});
+    }
+
+    if (user){
+      return res.status(422).send({auth: false, message: 'User already exist'});
+    }
+
     const newUser = new User({
 
       username: username,

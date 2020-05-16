@@ -30,7 +30,7 @@ User.init({
   },
 
   hashedpassword: {
-    type: DataTypes.STRING(8),
+    type: DataTypes.STRING(),
     allowNull: false,
     is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/},
 
