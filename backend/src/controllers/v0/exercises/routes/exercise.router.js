@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { Exercise } from '../models/Exercise';
+import { requireAuth } from '../../users/routes/auth.router'
 
 const router = Router();
 
@@ -23,20 +24,17 @@ router.post('/', async(req, res) => {
       duration,
     });
 
-    let savedExercise;
-
-    savedExercise = await newExercise.save();
+    let savedExercise = await newExercise.save();
+    return res.status(201).send({ user: savedExercise});
   } catch (e){
     console.log('is this the error', e);
     throw e;
   }
 
-  return res.status(201).send({ user: savedExercise});
-
 });
 
-router.get('/', async(req, res) => {
-  const items = await FeedItem.findAndCountAll({order: [['id', 'DESC']]});
+router.get('/', requireAuth, async(req, res) => {
+  const items = await Exercise.findAndCountAll({order: [['id', 'DESC']]});
   return res.status(201).send(items);
 });
 
