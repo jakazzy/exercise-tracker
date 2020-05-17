@@ -38,8 +38,17 @@ export default {
   },
 
   show: async(req, res) => {
-    res.status(200).send({ message: 'successful response'})
+    const {id } = req.params
+    if (id){
+      let exercise = await model.Exercise.findByPk(id)
+      res.status(200).send({ message: 'successful response', exercise })
+    }
+    res.status(404).send({message: 'User does not exist'})
     
+  },
+
+  update: async(req, res) => {
+    // res.status()
   },
   // show
   // update
