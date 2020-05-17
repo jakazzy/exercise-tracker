@@ -7,6 +7,6 @@ export const config = {
     database: process.env.DB_PGDATABASE,
     host: process.env.DB_HOST,
     dialect: 'postgress',
-    jwt: {secret: process.env.JWT_SECRET},
+    jwt: {secret: process.env.MY_SECRET},
   },
 };

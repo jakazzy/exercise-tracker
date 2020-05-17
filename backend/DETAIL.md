@@ -1,4 +1,3 @@
-This is an exercise tracker app with inspiration from project by Freecodecamp.
 This app has these features:
 User can signup/loggin
 signup
@@ -15,4 +14,3 @@ daily after exercising provide input of daily execise duration
 
 loggin
 username is fine. If it cannot be remembered, provide email then username will be sent to you
-
