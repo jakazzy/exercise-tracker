@@ -1,6 +1,15 @@
-import { Exercise } from './../../../../models/exercise-model/Exercise'
+import { initModels as model } from '../../models'
 
 export default {
+
+  index: async(req, res) => {
+    const items = await model.Exercise.findAndCountAll({
+      order: [['id', 'DESC']],
+    });
+
+    return res.status(200).send(items);
+  },
+
   create: async(req, res) => {
     try {
       const description = req.body.description;
@@ -15,7 +24,7 @@ export default {
       }
         
       
-      const newExercise = new Exercise({
+      const newExercise = new model.Exercise({
         description,
         duration,
       });
@@ -23,14 +32,18 @@ export default {
       let savedExercise = await newExercise.save();
       return res.status(201).send({ user: savedExercise});
     } catch (e){
-      console.log('is this the error', e);
-      throw e;
+      res.status(400).send({ message: e.message})
     }
       
   },
 
-  getAll: async(req, res) => {
-    const items = await Exercise.findAndCountAll({order: [['id', 'DESC']]});
-    return res.status(201).send(items);
+  show: async(req, res) => {
+    res.status(200).send({ message: 'successful response'})
+    
   },
+  // show
+  // update
+  // destroy
+
+
 }
