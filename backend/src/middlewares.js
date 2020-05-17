@@ -18,7 +18,7 @@ export const requireAuth = async(req, res, next) => {
         .send({auth: false, message: 'Failed to authenticate'})
     }
 
-    if (!decoded.id === parseInt(req.params.id, 10)){
+    if (decoded.id !== parseInt(req.params.id, 10)){
       res.status(403).send({message: 'Forbidden'})
     }
     

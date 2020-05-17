@@ -11,7 +11,6 @@ export default {
       const goal = req.body.goal;
       const reminder = req.body.reminder;
   
-      // const user = await User.findByPk(email);
       const user = await model.User.findAll({
         where: {email: email}})
       const password = await model.User.generatePasswords(hashedpassword)

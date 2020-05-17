@@ -25,7 +25,7 @@ import { restrictCors } from './middlewares'
 
    
     await DB.sequelize.sync({
-      force: true,
+      // force: true,
       logging: console.log,
     });
   } catch (error){
