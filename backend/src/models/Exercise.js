@@ -1,3 +1,4 @@
+
 export default (sequelize, Model, DataTypes) => {
   class Exercise extends Model {}
 
@@ -10,6 +11,7 @@ export default (sequelize, Model, DataTypes) => {
     modelName: 'Exercise',
   }
   );
+
   return Exercise
 }
 

@@ -1,8 +1,9 @@
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 import { config } from '../config/config'
+import { initModels as models } from '.'
 
-export default (sequelize, Model, DataTypes, Exercise) => {
+export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
   class User extends Model {
 
     static async authenticate(plainTextPassword, hash){
@@ -64,8 +65,19 @@ export default (sequelize, Model, DataTypes, Exercise) => {
   }
   );
 
+  console.log(Exercise, 'this is exercise');
   
-  User.hasMany(Exercise);
+  User.hasMany(models.Exercise, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  models.Exercise.belongsTo(User, {
+    foreignKey: {
+      name: 'UserId',
+      allowNull: false,
+    },
+  })
+
   return User
 
 }
