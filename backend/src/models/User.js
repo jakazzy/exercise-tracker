@@ -65,7 +65,6 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
   }
   );
 
-  console.log(Exercise, 'this is exercise');
   
   User.hasMany(models.Exercise, {
     onDelete: 'CASCADE',
