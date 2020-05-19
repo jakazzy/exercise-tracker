@@ -49,22 +49,17 @@ export default {
 
   show: async(req, res) => {
     try {
-      const {exerciseId } = req.params
-      const { id } = req.params
-
+      const {id, exerciseId } = req.params
       if (!exerciseId && id){
-        res.status(400).send({message: 'resource does not exist'})
+        res.status(404).send({message: 'resource does not exist'})
       }
       
       const exercid = parseInt(exerciseId, 10)
       const userid = parseInt(id, 10)
       const user = await model.User.findByPk(userid)
-     
-
       const exercise = await user.getExercises({
         where: {id: exercid},
       })
-      // const exercise = await model.Exercise.findByPk(exercid)
       res.status(200).send({ message: 'successful response', exercise })
     } catch (error) {
       res.status(404).send({message: error.message}) 
@@ -73,21 +68,41 @@ export default {
 
   update: async(req, res) => {
     try {
-      const { exercisesId} = req.params
-      if (exercisesId){
-        const id = parseInt(exercisesId, 10)
-        await model.Exercise.update(req.body, {where: {id}})
-        res.status(200).send({message: 'exercise updated successfully'})
-      }
+      const {id, exerciseId} = req.params
 
-      res.status(400).send({message: 'exercises does not exist'}) 
+      if (!exerciseId && id){
+        res.status(404).send({message: 'resource does not exist'}) 
+      }
+      const exercId = parseInt(exerciseId, 10)
+      // const userId = parseInt(id, 10)
+      // const user = await model.User.findByPk(userId)
+      // let exercise = await user.getExercises({
+      //   where: {id: exercId},
+      // })
+      await model.Exercise.update(req.body, {where: {id: exercId}})
+      res.status(200).send({message: 'exercise updated successfully'})
+      
     } catch (error) {
       res.status(400).send({message: error.message})
     }   
   },
-  // show
-  // update
-  // destroy
+ 
+  destroy: async(req, res) => {
+    try {
+      const { id, exerciseid } = req.params
+
+      if (!exerciseid && id){
+        res.status(404).send({message: 'resource does not exist'}) 
+      }
+      const exercid = parseInt(exerciseid, 10)
+      await model.Exercise.update(req.body, {where: {id: exercid}})
+      res.status(200).send({message: 'exercise deleted successfully'})
+      
+    } catch (error) {
+      res.status(400).send({message: error.message})
+    }
+   
+  },
 
 
 }

@@ -22,10 +22,10 @@ export default (express) => {
     requireAuth, 
     v1.exercisesController.update)
 
-  // router.delete(
-  //   '/users/:id/exercises/:exercisesId', 
-  //   requireAuth, 
-  //   v1.exercisesController.destroy)
+  router.delete(
+    '/users/:id/exercises/:exerciseId', 
+    requireAuth, 
+    v1.exercisesController.destroy)
 
   // Auth routes
   router.post('/signup', v1.usersController.create);
