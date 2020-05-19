@@ -80,7 +80,7 @@ export default {
     }
   
     const jwt = model.User.generateJWT(user)
-    res.status(200).send({ token: jwt, auth: false, user: user})
+    res.status(200).send({ token: jwt, auth: true, user: user})
   },
 
   resetPassword: () => {},
