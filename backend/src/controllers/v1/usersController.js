@@ -56,31 +56,43 @@ export default {
   },
 
   login: async(req, res) => {
-    const email = req.body.email
-    const hashedpassword = req.body.hashedpassword
+    try {
+      const email = req.body.email
+      const hashedpassword = req.body.hashedpassword
   
-    if (!email){
-      res.status(400).send({ auth: false, message: 'email is required'})
+      if (!email){
+        res.status(400).send({ auth: false, message: 'email is required'})
+      }
+  
+      if (!hashedpassword){
+        res.status(400).send({auth: false, message: 'password is required'})
+      }
+      console.log(email, 'can i find you');
+      
+      const user = await model.User.findAll({
+        where: {email: `${email}`}})
+      
+        
+      if (!user.length){
+        res.status(401).send({ auth: false, message: 'unauthorized'})
+      }
+    
+      const pwd = user[0].hashedpassword
+      console.log(pwd, 'are you really there ');
+      const authValid = await model.User.authenticate(hashedpassword, pwd)
+  
+      if (!authValid){
+        res.status(401).send({ auth: false, message: 'unauthorized'})
+      }
+  
+      const jwt = await model.User.generateJWT(user[0].id)
+      res.status(200).send({ token: jwt, auth: true, user: user})
+      
+    } catch (error) {
+      console.log(error, 'this is the error')
+      res.status(400).send({message: error.message})
     }
-  
-    if (!hashedpassword){
-      res.status(400).send({auth: false, message: 'password is required'})
-    }
-  
-    const user = await model.User.findAll({
-      where: {email: email}})
-    if (!user){
-      res.status(401).send({ auth: false, message: 'unauthorized'})
-    }
-    const pwd = user.hashedpassword
-    const authValid = await model.User.authenticate(hashedpassword, pwd)
-  
-    if (!authValid){
-      res.status(401).send({ auth: false, message: 'unauthorized'})
-    }
-  
-    const jwt = model.User.generateJWT(user)
-    res.status(200).send({ token: jwt, auth: true, user: user})
+    
   },
 
   resetPassword: () => {},
@@ -130,7 +142,7 @@ export default {
       if (!id){
         res.status(404).send({message: 'user not found'})
       }
-      await model.User.destroy(id)
+      await model.User.destroy({where: {id}})
       res.status(200).send({message: 'user deleted successfully'})
     } catch (error) {
       res.status(400).send({message: error.message})

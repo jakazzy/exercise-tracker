@@ -33,6 +33,7 @@ export default {
       if (!duration){
         return res.status(422).send({ message: 'Duration  cannot be null'});
       }
+      console.log(user, 'i just created you');
         
       let savedExercise = await user.createExercise(req.body)
       return res.status(201).send({ 
@@ -89,13 +90,13 @@ export default {
  
   destroy: async(req, res) => {
     try {
-      const { id, exerciseid } = req.params
+      const { id, exerciseId } = req.params
 
-      if (!exerciseid && id){
+      if (!exerciseId && id){
         res.status(404).send({message: 'resource does not exist'}) 
       }
-      const exercid = parseInt(exerciseid, 10)
-      await model.Exercise.destroy(req.body, {where: {id: exercid}})
+      const exercid = parseInt(exerciseId, 10)
+      await model.Exercise.destroy({where: {id: exercid}})
       res.status(200).send({message: 'exercise deleted successfully'})
       
     } catch (error) {
