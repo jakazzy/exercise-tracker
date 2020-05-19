@@ -68,14 +68,13 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
   
   User.hasMany(models.Exercise, {
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  });
-  models.Exercise.belongsTo(User, {
+    onUpdate: 'CASCADE',  
     foreignKey: {
       name: 'UserId',
       allowNull: false,
-    },
-  })
+    }, 
+  });
+  models.Exercise.belongsTo(User)
 
   return User
 
