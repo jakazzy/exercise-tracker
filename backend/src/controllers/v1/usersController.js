@@ -2,6 +2,7 @@ import {initModels as model} from '../../models'
 
 
 export default {
+  // authentication
   create: async(req, res) => {
     try {
       const username = req.body.username;
@@ -54,7 +55,6 @@ export default {
     } 
   },
 
-
   login: async(req, res) => {
     const email = req.body.email
     const hashedpassword = req.body.hashedpassword
@@ -84,5 +84,16 @@ export default {
   },
 
   resetPassword: () => {},
+
+  // user's actions
+  index: async(req, res) => {},
+
+  show: async(req, res) => {},
+
+  update: async(req, res) => {},
+
+  delete: async(req, res) => {},
+
+  
 }
 
