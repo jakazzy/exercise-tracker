@@ -95,7 +95,7 @@ export default {
         res.status(404).send({message: 'resource does not exist'}) 
       }
       const exercid = parseInt(exerciseid, 10)
-      await model.Exercise.update(req.body, {where: {id: exercid}})
+      await model.Exercise.delete(req.body, {where: {id: exercid}})
       res.status(200).send({message: 'exercise deleted successfully'})
       
     } catch (error) {
