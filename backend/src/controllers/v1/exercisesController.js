@@ -56,9 +56,16 @@ export default {
         res.status(400).send({message: 'resource does not exist'})
       }
       
-      // const exercid = parseInt(exercisesId, 10)
-      // const exercise = await model.Exercise.findByPk(id)
-      // res.status(200).send({ message: 'successful response', exercise })
+      const exercid = parseInt(exerciseId, 10)
+      const userid = parseInt(id, 10)
+      const user = await model.User.findByPk(userid)
+     
+
+      const exercise = await user.getExercises({
+        where: {id: exercid},
+      })
+      // const exercise = await model.Exercise.findByPk(exercid)
+      res.status(200).send({ message: 'successful response', exercise })
     } catch (error) {
       res.status(404).send({message: error.message}) 
     }
