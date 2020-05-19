@@ -33,7 +33,6 @@ export default {
       if (!duration){
         return res.status(422).send({ message: 'Duration  cannot be null'});
       }
-      console.log(user, 'i just created you');
         
       let savedExercise = await user.createExercise(req.body)
       return res.status(201).send({ 
@@ -42,7 +41,6 @@ export default {
       });
 
     } catch (e){
-      console.log(e, 'error message')
       res.status(400).send({ message: e.message})
     }
       

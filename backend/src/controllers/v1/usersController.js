@@ -67,8 +67,6 @@ export default {
       if (!hashedpassword){
         res.status(400).send({auth: false, message: 'password is required'})
       }
-      console.log(email, 'can i find you');
-      
       const user = await model.User.findAll({
         where: {email: `${email}`}})
       
@@ -78,7 +76,6 @@ export default {
       }
     
       const pwd = user[0].hashedpassword
-      console.log(pwd, 'are you really there ');
       const authValid = await model.User.authenticate(hashedpassword, pwd)
   
       if (!authValid){
@@ -89,7 +86,6 @@ export default {
       res.status(200).send({ token: jwt, auth: true, user: user})
       
     } catch (error) {
-      console.log(error, 'this is the error')
       res.status(400).send({message: error.message})
     }
     
@@ -115,9 +111,7 @@ export default {
         include: [{model: model.Exercise}],
       })
       res.status(200).send({user})
-    } catch (error) {
-      console.log(error, 'error message');
-      
+    } catch (error) { 
       res.status(400).send({message: error.message})
     }
     
