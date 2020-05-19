@@ -13,12 +13,12 @@ export default (express) => {
     v1.exercisesController.create);
 
   router.get(
-    '/users/:id/exercises/:exercisesId', 
+    '/users/:id/exercises/:exerciseId', 
     requireAuth, 
     v1.exercisesController.show)
 
   router.put(
-    '/users/:id/exercises/:exercisesId', 
+    '/users/:id/exercises/:exerciseId', 
     requireAuth, 
     v1.exercisesController.update)
 

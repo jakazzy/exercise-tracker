@@ -49,13 +49,16 @@ export default {
 
   show: async(req, res) => {
     try {
-      const {exercisesId } = req.params
-      if (exercisesId){
-        const id = parseInt(exercisesId, 10)
-        const exercise = await model.Exercise.findByPk(id)
-        res.status(200).send({ message: 'successful response', exercise })
+      const {exerciseId } = req.params
+      const { id } = req.params
+
+      if (!exerciseId && id){
+        res.status(400).send({message: 'resource does not exist'})
       }
-      res.status(400).send({message: 'exercises does not exist'})
+      
+      // const exercid = parseInt(exercisesId, 10)
+      // const exercise = await model.Exercise.findByPk(id)
+      // res.status(200).send({ message: 'successful response', exercise })
     } catch (error) {
       res.status(404).send({message: error.message}) 
     }
