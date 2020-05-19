@@ -89,15 +89,25 @@ export default {
   index: async(req, res) => {
     try {
       const users = await model.User.findAll()
-      res.status(200).json(users)
+      res.status(200).send({ users})
+    } catch (error) {
+      res.status(400).send({message: error.message})
+    }
+  },
+
+  show: async(req, res) => {
+    try {
+      const { id } = req.params
+      const user = model.User.findAll({
+        where: {id},
+        include: [{model: model.Exercise}],
+      })
+      res.status(200).send({user})
     } catch (error) {
       res.status(400).send({message: error.message})
     }
     
-
   },
-
-  show: async(req, res) => {},
 
   update: async(req, res) => {},
 
