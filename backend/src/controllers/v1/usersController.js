@@ -111,9 +111,31 @@ export default {
     
   },
 
-  update: async(req, res) => {},
+  update: async(req, res) => {
+    try {
+      const { id } = req.params
+      if (!id){
+        res.status(404).send({message: 'User not found'})
+      }
+      await model.User.update(req.body, { where: { id}})
+      res.status(200).send({message: 'user updated successfully'})
+    } catch (error) {
+      res.status(400).send({message: error.message})
+    }
+  },
 
-  delete: async(req, res) => {},
+  delete: async(req, res) => {
+    try {
+      const { id } = req.params
+      if (!id){
+        res.status(404).send({message: 'user not found'})
+      }
+      await model.User.destroy(id)
+      res.status(200).send({message: 'user deleted successfully'})
+    } catch (error) {
+      res.status(400).send({message: error.message})
+    }
+  },
 
   
 }
