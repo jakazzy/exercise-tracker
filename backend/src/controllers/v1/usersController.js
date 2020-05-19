@@ -136,7 +136,5 @@ export default {
       res.status(400).send({message: error.message})
     }
   },
-
-  
 }
 
