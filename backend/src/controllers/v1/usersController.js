@@ -98,12 +98,14 @@ export default {
   show: async(req, res) => {
     try {
       const { id } = req.params
-      const user = model.User.findAll({
+      const user = await model.User.findAll({
         where: {id},
         include: [{model: model.Exercise}],
       })
       res.status(200).send({user})
     } catch (error) {
+      console.log(error, 'error message');
+      
       res.status(400).send({message: error.message})
     }
     
