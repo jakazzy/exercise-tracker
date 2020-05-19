@@ -17,6 +17,14 @@ export default {
 
   create: async(req, res) => {
     try {
+      const {id} = req.params
+      const userId = parseInt(id, 10)
+      const user = await model.User.findByPk(userId)
+
+      if (!user){
+        res.status(404).send({message: 'User not found'})
+      }
+     
       const description = req.body.description;
       const duration = req.body.duration;
       if (!description){
@@ -26,15 +34,14 @@ export default {
         return res.status(422).send({ message: 'Duration  cannot be null'});
       }
         
-      
-      const newExercise = new model.Exercise({
-        description,
-        duration,
+      let savedExercise = await user.createExercise(req.body)
+      return res.status(201).send({ 
+        message: 'successfully added', 
+        exercise: savedExercise,
       });
-      
-      let savedExercise = await newExercise.save();
-      return res.status(201).send({ user: savedExercise});
+
     } catch (e){
+      console.log(e, 'error message')
       res.status(400).send({ message: e.message})
     }
       
