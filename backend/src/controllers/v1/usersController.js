@@ -48,7 +48,7 @@ export default {
       const payload = { id: savedUser.id}
       const jwt = await model.User.generateJWT(payload)
 
-      return res.status(201).send({ token: jwt, user: savedUser});
+      res.status(201).send({ token: jwt, user: savedUser});
     } catch (e){
       res.status(500).send({message: e.message})
     
@@ -86,7 +86,16 @@ export default {
   resetPassword: () => {},
 
   // user's actions
-  index: async(req, res) => {},
+  index: async(req, res) => {
+    try {
+      const users = await model.User.findAll()
+      res.status(200).json(users)
+    } catch (error) {
+      res.status(400).send({message: error.message})
+    }
+    
+
+  },
 
   show: async(req, res) => {},
 

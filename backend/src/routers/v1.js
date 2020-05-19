@@ -34,8 +34,8 @@ export default (express) => {
   // Users routes
   router.get('/users', v1.usersController.index)
   router.get('/users/:id', v1.usersController.show)
-  router.put('/users/:id', v1.usersController.update)
-  router.delete('/users/:id', v1.usersController.delete)
+  router.put('/users/:id', requireAuth, v1.usersController.update)
+  router.delete('/users/:id', requireAuth, v1.usersController.delete)
 
   return router
 
