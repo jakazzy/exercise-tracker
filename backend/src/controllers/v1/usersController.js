@@ -1,4 +1,7 @@
 import {initModels as model} from '../../models'
+import { transporter } from './../../config/sendEmail'
+import * as jwt from 'jsonwebtoken'
+import { config } from './config/config'
 
 
 export default {
@@ -48,7 +51,24 @@ export default {
       const payload = { id: savedUser.id}
       const jwt = await model.User.generateJWT(payload)
 
-      res.status(201).send({ token: jwt, user: savedUser});
+      // Generate confirmation url
+      const url = `http://localhost:8080/api/v1/confirmation/${jwt}`
+      const mailOptions = {
+        from: '',
+        to: email,
+        subject: 'Confirm Email',
+        test: `
+        Hello ${username},
+        <a href="${url}">click this link to activate account</a>`,
+      }
+
+      // send email
+      await transporter.sendEmail(mailOptions)
+      res.status(201).send(
+        { 
+          token: jwt, 
+          message: 'sign up successful. Activate account in email',
+        });
     } catch (e){
       res.status(500).send({message: e.message})
     
@@ -75,6 +95,11 @@ export default {
         res.status(401).send({ auth: false, message: 'unauthorized'})
       }
     
+      if (user.confirmed){
+        res.status(400).send({
+          auth: false, 
+          message: 'Confirm your email to login'})
+      }
       const pwd = user[0].hashedpassword
       const authValid = await model.User.authenticate(hashedpassword, pwd)
   
@@ -138,6 +163,19 @@ export default {
       }
       await model.User.destroy({where: {id}})
       res.status(200).send({message: 'user deleted successfully'})
+    } catch (error) {
+      res.status(400).send({message: error.message})
+    }
+  },
+  confirm: async(req, res) => {
+    try {
+      const id = jwt.verify(req.params.token, config.dev.jwt.secret)
+      if (!id){
+        res.status(400).send({message: 'Please sign up again'})
+      }
+      await model.User.Update({confirmed: true}, { where: {id}})
+      res.status(200).redirect('http://localhost:8080/api/v1/login')
+      
     } catch (error) {
       res.status(400).send({message: error.message})
     }

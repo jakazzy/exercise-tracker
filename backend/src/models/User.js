@@ -16,8 +16,10 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
       return await bcrypt.hash(plainTextPassword, salt)
     }
     
-    static async generateJWT(user){
-      return jwt.sign(user, config.dev.jwt.secret)
+    static async generateJWT(user, expiryPeriod = '1d'){
+      return jwt.sign(user, 
+        config.dev.jwt.secret, 
+        {expiresIn: expiryPeriod})
     }
     
   }
@@ -55,6 +57,10 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
     phonenumber: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    confirmed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     goal: DataTypes.INTEGER,
     reminder: DataTypes.BOOLEAN,

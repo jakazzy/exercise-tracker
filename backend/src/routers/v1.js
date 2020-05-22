@@ -34,6 +34,7 @@ export default (express) => {
   // Users routes
   router.get('/users', v1.usersController.index)
   router.get('/users/:id', v1.usersController.show)
+  router.get('/confirmation/:token', v1.usersController.confirm)
   router.put('/users/:id', requireAuth, v1.usersController.update)
   router.delete('/users/:id', requireAuth, v1.usersController.delete)
 
