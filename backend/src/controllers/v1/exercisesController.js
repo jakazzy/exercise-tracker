@@ -1,5 +1,10 @@
 import { initModels as model } from '../../models'
+import { RecordNotFoundError } from './../../lib/errors'
 
+const setUser = async id => {
+  const user = await model.User.findByPk(id)
+  return user || RecordNotFoundError('User not found')
+}
 export default {
 
   index: async(req, res) => {
@@ -19,7 +24,7 @@ export default {
     try {
       const {id} = req.params
       const userId = parseInt(id, 10)
-      const user = await model.User.findByPk(userId)
+      const user = setUser(userId)
 
       if (!user){
         res.status(404).send({message: 'User not found'})
@@ -55,7 +60,7 @@ export default {
       
       const exercid = parseInt(exerciseId, 10)
       const userid = parseInt(id, 10)
-      const user = await model.User.findByPk(userid)
+      const user = setUser(userid)
       const exercise = await user.getExercises({
         where: {id: exercid},
       })
@@ -73,11 +78,6 @@ export default {
         res.status(404).send({message: 'resource does not exist'}) 
       }
       const exercId = parseInt(exerciseId, 10)
-      // const userId = parseInt(id, 10)
-      // const user = await model.User.findByPk(userId)
-      // let exercise = await user.getExercises({
-      //   where: {id: exercId},
-      // })
       await model.Exercise.update(req.body, {where: {id: exercId}})
       res.status(200).send({message: 'exercise updated successfully'})
       
