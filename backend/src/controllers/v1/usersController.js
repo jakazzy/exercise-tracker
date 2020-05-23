@@ -1,7 +1,7 @@
 import {initModels as model} from '../../models'
 import { transporter } from './../../config/sendEmail'
 import * as jwt from 'jsonwebtoken'
-import { config } from './config/config'
+import { config } from './../../config/config'
 
 
 export default {
@@ -54,22 +54,26 @@ export default {
       // Generate confirmation url
       const url = `http://localhost:8080/api/v1/confirmation/${jwt}`
       const mailOptions = {
-        from: '',
+        from: 'people international',
         to: email,
         subject: 'Confirm Email',
-        test: `
-        Hello ${username},
+        html: `Hello ${username},
         <a href="${url}">click this link to activate account</a>`,
       }
+      
 
       // send email
-      await transporter.sendEmail(mailOptions)
+      transporter.sendMail(mailOptions)
+        .then(data => console.log(data, 'launched successfully'))
+    
       res.status(201).send(
         { 
           token: jwt, 
           message: 'sign up successful. Activate account in email',
         });
-    } catch (e){
+      
+      
+    } catch (e){ 
       res.status(500).send({message: e.message})
     
     } 
@@ -169,11 +173,15 @@ export default {
   },
   confirm: async(req, res) => {
     try {
-      const id = jwt.verify(req.params.token, config.dev.jwt.secret)
+      console.log(req.params.token, 'this is token');
+      
+      let {id } = jwt.verify(req.params.token, config.dev.jwt.secret)
+      id = parseInt(id, 10)
+      
       if (!id){
         res.status(400).send({message: 'Please sign up again'})
       }
-      await model.User.Update({confirmed: true}, { where: {id}})
+      await model.User.update({confirmed: true}, { where: {id}})
       res.status(200).redirect('http://localhost:8080/api/v1/login')
       
     } catch (error) {
