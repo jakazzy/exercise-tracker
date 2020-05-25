@@ -240,3 +240,6 @@ export default {
   },
 }
 
+// ref for reset passwor
+// https://ahrjarrett.com/posts/
+// 2019-02-08-resetting-user-passwords-with-node-and-jwt
