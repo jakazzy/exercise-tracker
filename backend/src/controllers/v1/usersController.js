@@ -14,24 +14,24 @@ export default {
       const phonenumber = req.body.phonenumber;
       const goal = req.body.goal;
       const reminder = req.body.reminder;
-  
+      const errors = []
+
       const user = await model.User.findAll({
         where: {email: email}})
       const password = await model.User.generatePasswords(hashedpassword)
   
       if (!username){
-        return res.status(422)
-          .send({auth: false, message: 'Username is required'});
+        errors.push({message: 'username cannot be empty'})
       }
       if (!email){
-        return res.status(422)
-          .send({auth: false, message: 'Email is required'});
+        errors.push({ message: ' email cannot be empty'})
       }
       if (!hashedpassword){
-        return res.status(422)
-          .send({auth: false, message: 'Password is required'});
+        errors.push({message: 'Password cannot be empty'})
       }
-  
+      if (errors.length){
+        res.status(422).json(errors)
+      }
       if (user && user.length){
         return res.status(422)
           .send({auth: false, message: 'User already exist'});
@@ -83,13 +83,17 @@ export default {
     try {
       const email = req.body.email
       const hashedpassword = req.body.hashedpassword
+      const errors = []
   
       if (!email){
-        res.status(400).send({ auth: false, message: 'email is required'})
+        errors.push({message: 'email cannot be empty'})
       }
   
       if (!hashedpassword){
-        res.status(400).send({auth: false, message: 'password is required'})
+        errors.push({message: 'password cannot be empty'})
+      }
+      if (errors.length){
+        res.status(422).json(errors)
       }
       const user = await model.User.findAll({
         where: {email: `${email}`}})

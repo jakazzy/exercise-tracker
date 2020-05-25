@@ -36,7 +36,7 @@ export default {
         errors.push({ message: 'Duration  cannot be empty'});
       }
       if (errors.length){
-        res.status(400).json(errors)
+        res.status(422).json(errors)
       }
       let savedExercise = await user.createExercise(req.body)
       return res.status(201).send({ 
