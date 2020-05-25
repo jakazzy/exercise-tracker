@@ -218,7 +218,7 @@ export default {
 
   },
 
-  resetPassword: async(req, res) => {
+  resetNewPassword: async(req, res) => {
     try {
       const { userid, token } = req.params
       const user = model.User.findOne(userid)
