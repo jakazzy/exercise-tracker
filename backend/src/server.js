@@ -5,6 +5,7 @@ import express from 'express';
 import routers from './routers';
 import {uninitModels, initModels} from './models'
 import { restrictCors } from './middlewares'
+import { RecordNotFound} from './lib/errors'
 
 
 (async() => {
@@ -40,7 +41,17 @@ import { restrictCors } from './middlewares'
   app.use(bodyParser.json());
   app.use(restrictCors);
   app.use('/api/v1', routers.v1Router(express));
-
+  // route to handle errors
+  app.use((req, res, next) => {
+   
+    const error = new RecordNotFound('Resource not found')  
+    res.status(error.statusCode || 500).send({
+      error: {
+        status: error.statusCode || 500,
+        message: error.message || 'Internal Server Error',
+      }})
+  }
+  )
  
   app.listen(port, () => {
     console.log(`server running http://localhost:${ port }`);
