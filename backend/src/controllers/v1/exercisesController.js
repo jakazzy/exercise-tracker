@@ -1,8 +1,11 @@
 import { initModels as model } from '../../models'
-import { RecordNotFoundError } from './../../lib/errors'
-import {setUser} from '../../lib/utils'
+import { RecordNotFound } from './../../lib/errors'
 
 
+export const setUser = async id => {
+  const user = await model.User.findByPk(id)
+  return user || RecordNotFound('User not found')
+}
 export default {
 
   index: async(req, res) => {
@@ -22,7 +25,7 @@ export default {
     try {
       const {id} = req.params
       const userId = parseInt(id, 10)
-      const user = setUser(userId, model, RecordNotFoundError)
+      const user = setUser(userId)
       const errors = []
 
       const description = req.body.description;
@@ -61,7 +64,7 @@ export default {
       
       const exercid = parseInt(exerciseId, 10)
       const userid = parseInt(id, 10)
-      const user = setUser(userid, model, RecordNotFoundError)
+      const user = setUser(userid)
       const exercise = await user.getExercises({
         where: {id: exercid},
       })
@@ -80,7 +83,7 @@ export default {
       const {id, exerciseId} = req.params
 
       if (!exerciseId && id){
-        return RecordNotFoundError('Resource notfound')
+        return RecordNotFound('Resource notfound')
       }
       const exercId = parseInt(exerciseId, 10)
       await model.Exercise.update(req.body, {where: {id: exercId}})
@@ -99,7 +102,7 @@ export default {
       const { id, exerciseId } = req.params
 
       if (!exerciseId && id){
-        return RecordNotFoundError('resource does not exist')
+        return RecordNotFound('resource does not exist')
       }
       const exercid = parseInt(exerciseId, 10)
       await model.Exercise.destroy({where: {id: exercid}})
