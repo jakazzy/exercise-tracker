@@ -21,6 +21,9 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
         config.dev.jwt.secret, 
         {expiresIn: expiryPeriod})
     }
+
+    static async confirmEmail(){}
+    static async resetPassword(){}
     
   }
  

@@ -124,9 +124,6 @@ export default {
     }
     
   },
-
-  resetPassword: () => {},
-
   // user's actions
   index: async(req, res) => {
     try {
