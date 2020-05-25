@@ -2,7 +2,7 @@ import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 import { config } from '../config/config'
 import { initModels as models } from '.'
-import { transporter } from './../../config/sendEmail'
+import { transporter } from '../config/sendEmail'
 
 export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
   class User extends Model {
@@ -40,7 +40,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
       transporter.sendMail(mailOptions)
         .then(data => console.log(data, 'launched successfully'))
     }
-    
+
     static async resetPassword(){}
     
   }
