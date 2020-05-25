@@ -38,12 +38,13 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
  
       // send email
       transporter.sendMail(mailOptions)
-        .then(data => console.log(data, 'launched successfully'))
+        .then(data => { console.log('email sent successfully'); return data })
         .catch(err => err)
     }
 
     static async generatePasswordResetToken(hash, id, createdAt){
       const secret = `${hash}-${createdAt}`
+      
       const payload = {userId: id}
       return jwt.sign({payload}, secret, {
         expiresIn: '1h',
@@ -61,8 +62,10 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
         Note that this linik is inactive after a day`,
       }
       transporter.sendMail(mailOptions)
-        .then(data => console.log(data, 'email sent successfully'))
-        .catch(err => err)
+        .then(data => { console.log('email sent successfully'); return data; })
+        .catch(err => {
+          console.log(err);
+        })
     }
     
   }

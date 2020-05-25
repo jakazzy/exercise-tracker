@@ -200,14 +200,15 @@ export default {
       if (!user){ RecordNotFound('user does not exist') }
 
       const token = await model.User.generatePasswordResetToken(
-        user.hashedPassword, 
+        user.hashedpassword, 
         user.id, 
         user.createdAt)
-
       await model.User.resetPasswordMessage(
         user.id, email, user.username, token
       )
-      
+      res.status(200).send({
+        message: 'Follow instructions to change password in email',
+      })
     } catch (e) {
       if (e.statusCode){
         res.status(e.statusCode).send({message: e.message})
@@ -221,20 +222,22 @@ export default {
   resetNewPassword: async(req, res) => {
     try {
       const { userid, token } = req.params
-      const user = model.User.findOne(userid)
+      const user = await model.User.findByPk(userid)
       const secret = `${user.hashedpassword}-${user.createdAt}`
-      let {id } = jwt.verify(token, secret)
-      id = parseInt(id, 10)
+      const {payload } = jwt.verify(token, secret)
+      const id = parseInt(payload.userId, 10)
+      
       if (!req.body){ 
         res.status(400).send({message: 'password cannot be empty'})
       }  
       if (user.id === id){
-        const hash = await model.User.generatePasswords(req.body)
+        const hash = await model.User.generatePasswords(req.body.hashedpassword)
         await model.User.update({hashedpassword: hash}, { where: { id}})
         res.status(200).redirect('http://localhost:8080/api/v1/login')
       }
-      
+      res.status(400).send({message: 'error has occured'})
     } catch (e) {
+
       res.status(400).send({message: e.message})
     }
   },

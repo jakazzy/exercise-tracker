@@ -39,7 +39,6 @@ export default {
       if (errors.length){
         res.status(422).json(errors)
       }
-      console.log(user, 'this might be user')
       let savedExercise = await user.createExercise(req.body)
       return res.status(201).send({ 
         message: 'successfully added', 
