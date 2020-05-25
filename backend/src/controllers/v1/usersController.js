@@ -1,5 +1,4 @@
 import {initModels as model} from '../../models'
-import { transporter } from './../../config/sendEmail'
 import * as jwt from 'jsonwebtoken'
 import { config } from './../../config/config'
 import { RecordNotFound } from '../../lib/errors'
@@ -51,21 +50,9 @@ export default {
 
       const payload = { id: savedUser.id}
       const jwt = await model.User.generateJWT(payload)
-
-      // Generate confirmation url
-      const url = `http://localhost:8080/api/v1/confirmation/${jwt}`
-      const mailOptions = {
-        from: 'people international',
-        to: email,
-        subject: 'Confirm Email',
-        html: `Hello ${username},
-        <a href="${url}">click this link to activate account</a>`,
-      }
-      
-
-      // send email
-      transporter.sendMail(mailOptions)
-        .then(data => console.log(data, 'launched successfully'))
+     
+      // condirm email
+      await model.User.confirmEmail(email, username, jwt)
     
       res.status(201).send(
         { 

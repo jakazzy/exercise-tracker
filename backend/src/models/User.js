@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 import { config } from '../config/config'
 import { initModels as models } from '.'
+import { transporter } from './../../config/sendEmail'
 
 export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
   class User extends Model {
@@ -22,7 +23,24 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
         {expiresIn: expiryPeriod})
     }
 
-    static async confirmEmail(){}
+    static async confirmEmail(email, username, jwt){
+
+      // Generate confirmation url
+      const url = `http://localhost:8080/api/v1/confirmation/${jwt}`
+      const mailOptions = {
+        from: 'people international',
+        to: email,
+        subject: 'Confirm Email',
+        html: `Hello ${username},
+         <a href="${url}">click this link to activate account</a>`,
+      }
+       
+ 
+      // send email
+      transporter.sendMail(mailOptions)
+        .then(data => console.log(data, 'launched successfully'))
+    }
+    
     static async resetPassword(){}
     
   }
