@@ -1,10 +1,8 @@
 import { initModels as model } from '../../models'
 import { RecordNotFoundError } from './../../lib/errors'
+import {setUser} from '../../lib/utils'
 
-const setUser = async id => {
-  const user = await model.User.findByPk(id)
-  return user || RecordNotFoundError('User not found')
-}
+
 export default {
 
   index: async(req, res) => {
@@ -24,7 +22,7 @@ export default {
     try {
       const {id} = req.params
       const userId = parseInt(id, 10)
-      const user = setUser(userId)
+      const user = setUser(userId, model, RecordNotFoundError)
       const errors = []
 
       const description = req.body.description;
@@ -63,7 +61,7 @@ export default {
       
       const exercid = parseInt(exerciseId, 10)
       const userid = parseInt(id, 10)
-      const user = setUser(userid)
+      const user = setUser(userid, model, RecordNotFoundError)
       const exercise = await user.getExercises({
         where: {id: exercid},
       })
