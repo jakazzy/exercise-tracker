@@ -2,6 +2,7 @@ import {initModels as model} from '../../models'
 import { transporter } from './../../config/sendEmail'
 import * as jwt from 'jsonwebtoken'
 import { config } from './../../config/config'
+import { RecordNotFound } from '../../lib/errors'
 
 
 export default {
@@ -143,9 +144,15 @@ export default {
         where: {id},
         include: [{model: model.Exercise}],
       })
+      if (!user){
+        RecordNotFound('user not found')
+      }
       res.status(200).send({user})
-    } catch (error) { 
-      res.status(400).send({message: error.message})
+    } catch (e) { 
+      if (e.statusCode){
+        res.status(404).send({message: e.message})
+      }
+      res.status(400).send({message: e.message})
     }
     
   },
@@ -154,12 +161,15 @@ export default {
     try {
       const { id } = req.params
       if (!id){
-        res.status(404).send({message: 'User not found'})
+        RecordNotFound('user not found')
       }
       await model.User.update(req.body, { where: { id}})
       res.status(200).send({message: 'user updated successfully'})
-    } catch (error) {
-      res.status(400).send({message: error.message})
+    } catch (e) {
+      if (e.statusCode){
+        res.status(e.statusCode).message({ message: e.message})
+      }
+      res.status(400).send({message: e.message})
     }
   },
 
@@ -167,29 +177,31 @@ export default {
     try {
       const { id } = req.params
       if (!id){
-        res.status(404).send({message: 'user not found'})
+        RecordNotFound('user not found')
       }
       await model.User.destroy({where: {id}})
       res.status(200).send({message: 'user deleted successfully'})
-    } catch (error) {
-      res.status(400).send({message: error.message})
+    } catch (e) {
+      if (e.statusCode){
+        res.status(e.statusCode).send({message: e.message})
+      }
+      res.status(400).send({message: e.message})
     }
   },
   confirm: async(req, res) => {
     try {
-      console.log(req.params.token, 'this is token');
-      
       let {id } = jwt.verify(req.params.token, config.dev.jwt.secret)
       id = parseInt(id, 10)
       
       if (!id){
-        res.status(400).send({message: 'Please sign up again'})
+        RecordNotFound('user notfound')
       }
       await model.User.update({confirmed: true}, { where: {id}})
       res.status(200).redirect('http://localhost:8080/api/v1/login')
       
-    } catch (error) {
-      res.status(400).send({message: error.message})
+    } catch (e) {
+      res.status(e.statusCode).send({message: e.message})
+      res.status(400).send({message: e.message})
     }
   },
 }
