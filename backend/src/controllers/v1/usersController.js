@@ -103,7 +103,7 @@ export default {
         res.status(401).send({ auth: false, message: 'unauthorized'})
       }
   
-      const jwt = await model.User.generateJWT(user[0].id)
+      const jwt = await model.User.generateJWT({id: user[0].id})
       res.status(200).send({ token: jwt, auth: true, user: user})
       
     } catch (error) {

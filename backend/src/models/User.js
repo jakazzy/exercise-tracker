@@ -20,7 +20,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
     static async generateJWT(user, expiryPeriod = '1d'){
       return jwt.sign(user, 
         config.dev.jwt.secret, 
-        {expiresIn: expiryPeriod})
+        {expiresIn: `${expiryPeriod}`})
     }
 
     static async confirmEmail(email, username, jwt){

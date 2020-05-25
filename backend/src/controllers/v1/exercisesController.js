@@ -25,7 +25,7 @@ export default {
     try {
       const {id} = req.params
       const userId = parseInt(id, 10)
-      const user = setUser(userId)
+      const user = await setUser(userId)
       const errors = []
 
       const description = req.body.description;
@@ -39,6 +39,7 @@ export default {
       if (errors.length){
         res.status(422).json(errors)
       }
+      console.log(user, 'this might be user')
       let savedExercise = await user.createExercise(req.body)
       return res.status(201).send({ 
         message: 'successfully added', 
@@ -64,7 +65,7 @@ export default {
       
       const exercid = parseInt(exerciseId, 10)
       const userid = parseInt(id, 10)
-      const user = setUser(userid)
+      const user = await setUser(userid)
       const exercise = await user.getExercises({
         where: {id: exercid},
       })
