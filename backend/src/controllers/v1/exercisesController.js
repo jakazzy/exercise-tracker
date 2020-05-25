@@ -25,20 +25,19 @@ export default {
       const {id} = req.params
       const userId = parseInt(id, 10)
       const user = setUser(userId)
+      const errors = []
 
-      if (!user){
-        res.status(404).send({message: 'User not found'})
-      }
-     
       const description = req.body.description;
       const duration = req.body.duration;
       if (!description){
-        return res.status(422).send({message: 'Description  cannot be null'});
+        errors.push({message: 'Description  cannot be empty'});
       }
       if (!duration){
-        return res.status(422).send({ message: 'Duration  cannot be null'});
+        errors.push({ message: 'Duration  cannot be empty'});
       }
-        
+      if (errors.length){
+        res.status(422).json(errors)
+      }
       let savedExercise = await user.createExercise(req.body)
       return res.status(201).send({ 
         message: 'successfully added', 
