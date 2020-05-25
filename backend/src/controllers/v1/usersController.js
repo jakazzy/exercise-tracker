@@ -172,6 +172,7 @@ export default {
       res.status(400).send({message: e.message})
     }
   },
+
   confirm: async(req, res) => {
     try {
       let {id } = jwt.verify(req.params.token, config.dev.jwt.secret)
@@ -185,6 +186,55 @@ export default {
       
     } catch (e) {
       res.status(e.statusCode).send({message: e.message})
+      res.status(400).send({message: e.message})
+    }
+  },
+
+  sendResetPasswordEmail: async(req, res) => {
+    try {
+      const { email } = req.body
+
+      if (!email){ res.status(400).send({message: 'email cannot be empty'}) }
+      const user = await model.User.findOne({email})
+      
+      if (!user){ RecordNotFound('user does not exist') }
+
+      const token = await model.User.generatePasswordResetToken(
+        user.hashedPassword, 
+        user.id, 
+        user.createdAt)
+
+      await model.User.resetPasswordMessage(
+        user.id, email, user.username, token
+      )
+      
+    } catch (e) {
+      if (e.statusCode){
+        res.status(e.statusCode).send({message: e.message})
+      }
+      res.status(400).send({message: e.message})
+    }
+    
+
+  },
+
+  resetPassword: async(req, res) => {
+    try {
+      const { userid, token } = req.params
+      const user = model.User.findOne(userid)
+      const secret = `${user.hashedpassword}-${user.createdAt}`
+      let {id } = jwt.verify(token, secret)
+      id = parseInt(id, 10)
+      if (!req.body){ 
+        res.status(400).send({message: 'password cannot be empty'})
+      }  
+      if (user.id === id){
+        const hash = await model.User.generatePasswords(req.body)
+        await model.User.update({hashedpassword: hash}, { where: { id}})
+        res.status(200).redirect('http://localhost:8080/api/v1/login')
+      }
+      
+    } catch (e) {
       res.status(400).send({message: e.message})
     }
   },

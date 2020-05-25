@@ -23,10 +23,10 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
         {expiresIn: `${expiryPeriod}`})
     }
 
-    static async confirmEmail(email, username, jwt){
+    static async confirmEmail(email, username, token){
 
       // Generate confirmation url
-      const url = `http://localhost:8080/api/v1/confirmation/${jwt}`
+      const url = `http://localhost:8080/api/v1/confirmation/${token}`
       const mailOptions = {
         from: 'people international',
         to: email,
@@ -39,9 +39,31 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
       // send email
       transporter.sendMail(mailOptions)
         .then(data => console.log(data, 'launched successfully'))
+        .catch(err => err)
     }
 
-    static async resetPassword(){}
+    static async generatePasswordResetToken(hash, id, createdAt){
+      const secret = `${hash}-${createdAt}`
+      const payload = {userId: id}
+      return jwt.sign({payload}, secret, {
+        expiresIn: '1h',
+      })
+    }
+
+    static async resetPasswordMessage(id, email, username, token){
+      const url = `http://localhost:8080/api/v1/resetnewpassword/${id}/${token}`
+      const mailOptions = {
+        from: '',
+        to: email,
+        subject: 'Reset Password',
+        html: `Hello ${username},
+        <a href="${url}"> click on this link to reset password. </a>
+        Note that this linik is inactive after a day`,
+      }
+      transporter.sendMail(mailOptions)
+        .then(data => console.log(data, 'email sent successfully'))
+        .catch(err => err)
+    }
     
   }
  

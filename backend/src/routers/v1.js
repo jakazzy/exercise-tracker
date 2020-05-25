@@ -37,6 +37,10 @@ export default (express) => {
   router.get('/confirmation/:token', v1.usersController.confirm)
   router.put('/users/:id', requireAuth, v1.usersController.update)
   router.delete('/users/:id', requireAuth, v1.usersController.delete)
+  router.post('/reset', v1.usersController.sendResetPasswordEmail)
+  router.post(
+    '/resetpassword/:userid/:token', 
+    v1.usersController.resetNewPassword)
 
   return router
 
