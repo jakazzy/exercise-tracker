@@ -46,7 +46,11 @@ export default {
       });
 
     } catch (e){
-      res.status(400).send({ message: e.message})
+      if (e.statusCode){
+        res.status(e.statusCode).send({ message: e.message}) 
+      } else {
+        res.status(400).send({message: e.message})
+      }
     }
       
   },
