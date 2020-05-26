@@ -115,7 +115,7 @@ export default {
       id = parseInt(id, 10)
 
       if (!id){
-        return new RecordNotFoundError('user not found')
+        return res.status(404).send({message: 'user not found'})
       }
 
       await model.User.update({confirmed: true}, { where: { id }})
@@ -135,7 +135,8 @@ export default {
   index: async(req, res) => {
     try {
       const users = await model.User.findAll()
-      res.status(200).send({ users})
+      res.status(200).send({ users })
+
     } catch (error) {
       res.status(400).send({message: error.message})
     }
@@ -144,16 +145,16 @@ export default {
   show: async(req, res) => {
     try {
       const { id } = req.params
-      const user = await model.User.findOne({id})
+      const user = await model.User.findOne({ id })
+
       if (!user){
-        return new RecordNotFoundError('user not found')
+        return res.status(404).send({message: 'user not found'})
       }
-      res.status(200).send({user})
+
+      res.status(200).send({ user })
+
     } catch (e) { 
-      if (e.statusCode){
-        res.status(404).send({message: e.message})
-      }
-      res.status(400).send({message: e.message})
+      return res.status(400).send({message: e.message})
     }   
   },
 
