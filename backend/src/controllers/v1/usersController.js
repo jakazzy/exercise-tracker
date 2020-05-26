@@ -15,7 +15,6 @@ export default {
       const goal = req.body.goal;
       const reminder = req.body.reminder;
       const errors = []
-
       const user = await model.User.findAll({
         where: {email: email}})
       const password = await model.User.generatePasswords(hashedpassword)
@@ -38,7 +37,6 @@ export default {
       }
   
       const newUser = new model.User({
-  
         username: username,
         email: email,
         hashedpassword: password,
@@ -47,23 +45,17 @@ export default {
         reminder: reminder,
       });
       let savedUser = await newUser.save();
-
       const payload = { id: savedUser.id}
-      const jwt = await model.User.generateJWT(payload)
-     
-      // condirm email
-      await model.User.confirmEmail(email, username, jwt)
-    
+      const jwt = await model.User.generateJWT(payload)  
+      // confirm email
+      await model.User.confirmEmail(email, username, jwt)    
       res.status(201).send(
         { 
           token: jwt, 
           message: 'sign up successful. Activate account in email',
-        });
-      
-      
+        });      
     } catch (e){ 
       res.status(500).send({message: e.message})
-    
     } 
   },
 
@@ -75,8 +67,7 @@ export default {
   
       if (!email){
         errors.push({message: 'email cannot be empty'})
-      }
-  
+      } 
       if (!hashedpassword){
         errors.push({message: 'password cannot be empty'})
       }
@@ -84,13 +75,10 @@ export default {
         res.status(422).json(errors)
       }
       const user = await model.User.findAll({
-        where: {email: `${email}`}})
-      
-        
+        where: {email: `${email}`}})     
       if (!user.length){
         res.status(401).send({ auth: false, message: 'unauthorized'})
-      }
-    
+      }  
       if (user.confirmed){
         res.status(400).send({
           auth: false, 
@@ -98,18 +86,15 @@ export default {
       }
       const pwd = user[0].hashedpassword
       const authValid = await model.User.authenticate(hashedpassword, pwd)
-  
       if (!authValid){
         res.status(401).send({ auth: false, message: 'unauthorized'})
       }
-  
       const jwt = await model.User.generateJWT({id: user[0].id})
-      res.status(200).send({ token: jwt, auth: true, user: user})
-      
+
+      res.status(200).send({ token: jwt, auth: true, user: user})   
     } catch (error) {
       res.status(400).send({message: error.message})
-    }
-    
+    }   
   },
   // user's actions
   index: async(req, res) => {
