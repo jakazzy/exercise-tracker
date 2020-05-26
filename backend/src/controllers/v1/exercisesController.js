@@ -81,7 +81,7 @@ export default {
       const exercise = await user.getExercise({ id: exercid})
 
       res.status(200).send({ message: 'successful response', exercise })
-      
+
     } catch (e) {
       if (e.statusCode){
         return res.status(e.statusCode).send({message: e.message}) 
@@ -94,13 +94,23 @@ export default {
   update: async(req, res) => {
     try {
       const {id, exerciseId} = req.params
-      if (!exerciseId || !id){
-        return new RecordNotFoundError('Resource notfound')
-      }
-      const exercId = parseInt(exerciseId, 10)
-      await model.Exercise.update(req.body, {where: {id: exercId}})
+      const { description, duration} = req.body
 
-      res.status(200).send({message: 'exercise updated successfully'})   
+      if (!exerciseId || !id){
+        return res.status(404).send({message: 'Resource not found'})
+      }
+
+      const exercId = parseInt(exerciseId, 10)
+      const user = await setUser(id)
+      const exercise = await user.getExercise({ id: exercId})
+
+      exercise.description = description
+      exercise.duration = duration
+      await exercise.save()
+      // await model.Exercise.update(req.body, {where: {id: exercId}})
+
+      res.status(200).send({message: 'exercise updated successfully'}) 
+
     } catch (e) {
       if (e.statusCode){
         res.status(e.statusCode).send({message: e.message})
@@ -113,11 +123,16 @@ export default {
   destroy: async(req, res) => {
     try {
       const { id, exerciseId } = req.params
+
       if (!exerciseId || !id){
-        return new RecordNotFoundError('resource does not exist')
+        return res.status(404).send({ message: 'resource does not exist'})
       }
-      const exercid = parseInt(exerciseId, 10)
-      await model.Exercise.destroy({where: {id: exercid}})
+
+      const exercId = parseInt(exerciseId, 10)
+      const userId = parseInt(id, 10)
+      const user = await setUser(userId)
+      const exercise = await user.getExercise({ id: exercId})
+      await exercise.destroy()
 
       res.status(200).send({message: 'exercise deleted successfully'})    
     } catch (e) {
