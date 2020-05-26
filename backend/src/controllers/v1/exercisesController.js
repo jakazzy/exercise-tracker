@@ -2,10 +2,11 @@ import { initModels as model } from '../../models'
 import { RecordNotFound } from './../../lib/errors'
 
 
-export const setUser = async id => {
+const setUser = async id => {
   const user = await model.User.findByPk(id)
   return user || RecordNotFound('User not found')
 }
+
 export default {
 
   index: async(req, res) => {
@@ -30,20 +31,25 @@ export default {
 
       const description = req.body.description;
       const duration = req.body.duration;
+      
       if (!description){
         errors.push({message: 'Description  cannot be empty'});
       }
+      
       if (!duration){
         errors.push({ message: 'Duration  cannot be empty'});
       }
+      
       if (errors.length){
         res.status(422).json(errors)
+      } else {
+        
+        let savedExercise = await user.createExercise(req.body)
+        res.status(201).send({ 
+          message: 'successfully added', 
+          exercise: savedExercise,
+        });
       }
-      let savedExercise = await user.createExercise(req.body)
-      return res.status(201).send({ 
-        message: 'successfully added', 
-        exercise: savedExercise,
-      });
 
     } catch (e){
       if (e.statusCode){
