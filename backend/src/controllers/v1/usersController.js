@@ -1,7 +1,6 @@
 import {initModels as model} from '../../models'
 import * as jwt from 'jsonwebtoken'
 import { config } from './../../config/config'
-import { RecordNotFoundError } from '../../lib/errors'
 
 
 export default {
@@ -193,13 +192,26 @@ export default {
   sendResetPasswordEmail: async(req, res) => {
     try {
       const { email } = req.body
-      if (!email){ res.status(400).send({message: 'email cannot be empty'}) }
+
+      if (!email){
+        return res.status(422).send({
+          message: 'email cannot be empty',
+        }) 
+      }
+
       const user = await model.User.findOne({email}) 
-      if (!user){ return new RecordNotFoundError('user does not exist') }
+
+      if (!user){
+        return res.status(404).send({ 
+          message: 'user does not exist',
+        }) 
+      }
+
       const token = await model.User.generatePasswordResetToken(
         user.hashedpassword, 
         user.id, 
         user.createdAt)
+
       await model.User.resetPasswordMessage(
         user.id, email, user.username, token
       )
@@ -207,14 +219,10 @@ export default {
       res.status(200).send({
         message: 'Follow instructions to change password in email',
       })
-    } catch (e) {
-      if (e.statusCode){
-        res.status(e.statusCode).send({message: e.message})
-      }
+
+    } catch (e) { 
       res.status(400).send({message: e.message})
     }
-    
-
   },
 
   resetNewPassword: async(req, res) => {
@@ -225,17 +233,18 @@ export default {
       const {payload } = jwt.verify(token, secret)
       const id = parseInt(payload.userId, 10)
       
-      if (!req.body){ 
-        res.status(400).send({message: 'password cannot be empty'})
+      if (!req.body.hashedpassword){ 
+        return res.status(422).send({message: 'password cannot be empty'})
       }  
+
       if (user.id === id){
         const hash = await model.User.generatePasswords(req.body.hashedpassword)
         await model.User.update({hashedpassword: hash}, { where: { id}})
-        res.status(200).redirect('http://localhost:8080/api/v1/login')
+        return res.status(200).redirect('http://localhost:8080/api/v1/login')
       }
-      res.status(400).send({message: 'error has occured'})
-    } catch (e) {
+      return res.status(401).send({message: 'unauthorised'})
 
+    } catch (e) {
       res.status(400).send({message: e.message})
     }
   },
