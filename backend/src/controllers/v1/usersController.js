@@ -161,15 +161,15 @@ export default {
   update: async(req, res) => {
     try {
       const { id } = req.params
+
       if (!id){
-        return new RecordNotFoundError('user not found')
+        return res.status(404).send({ message: 'user not found'})
       }
+
       await model.User.update(req.body, { where: { id}})
       res.status(200).send({message: 'user updated successfully'})
+
     } catch (e) {
-      if (e.statusCode){
-        res.status(e.statusCode).message({ message: e.message})
-      }
       res.status(400).send({message: e.message})
     }
   },
