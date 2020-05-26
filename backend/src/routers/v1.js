@@ -31,12 +31,12 @@ export default (express) => {
 
   // Auth routes
   router.post('/signup', v1.usersController.create);
-  // router.post('/login', v1.usersController.login)
+  router.post('/login', v1.usersController.login)
 
   // Users routes
   // router.get('/users', v1.usersController.index)
   // router.get('/users/:id', v1.usersController.show)
-  // router.get('/confirmation/:token', v1.usersController.confirm)
+  router.get('/confirmation/:token', v1.usersController.confirm)
   // router.put('/users/:id', requireAuth, v1.usersController.update)
   // router.delete('/users/:id', requireAuth, v1.usersController.delete)
   // router.post('/reset', v1.usersController.sendResetPasswordEmail)
