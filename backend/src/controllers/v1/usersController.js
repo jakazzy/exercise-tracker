@@ -108,6 +108,29 @@ export default {
       res.status(400).send({message: error.message})
     }   
   },
+
+  confirm: async(req, res) => {
+    try {
+      let { id } = jwt.verify(req.params.token, config.dev.jwt.secret)
+      id = parseInt(id, 10)
+
+      if (!id){
+        return new RecordNotFoundError('user not found')
+      }
+
+      await model.User.update({confirmed: true}, { where: { id }})
+
+      res.status(302).redirect('http://localhost:8080/api/v1/login') 
+
+    } catch (e) {
+      if (e.statusCode){
+        return res.status(e.statusCode).send({message: e.message}) 
+      }
+
+      return res.status(400).send({message: e.message})
+    }
+  },
+
   // user's actions
   index: async(req, res) => {
     try {
@@ -162,22 +185,6 @@ export default {
       if (e.statusCode){
         res.status(e.statusCode).send({message: e.message})
       }
-      res.status(400).send({message: e.message})
-    }
-  },
-
-  confirm: async(req, res) => {
-    try {
-      let {id } = jwt.verify(req.params.token, config.dev.jwt.secret)
-      id = parseInt(id, 10) 
-      if (!id){
-        return new RecordNotFoundError('user notfound')
-      }
-      await model.User.update({confirmed: true}, { where: {id}})
-
-      res.status(200).redirect('http://localhost:8080/api/v1/login') 
-    } catch (e) {
-      res.status(e.statusCode).send({message: e.message})
       res.status(400).send({message: e.message})
     }
   },
