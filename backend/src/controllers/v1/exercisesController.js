@@ -18,7 +18,7 @@ export default {
       const userId = parseInt(id, 10)
       const user = await setUser(userId)
       const items = await user.getExercises() 
-      
+
       res.status(200).send(items);  
       
     } catch (error) {
@@ -70,20 +70,21 @@ export default {
   show: async(req, res) => {
     try {
       const {id, exerciseId } = req.params
+
       if (!exerciseId || !id){
-        res.status(404).send({message: 'resource does not exist'})
+        return res.status(404).send({message: 'resource does not exist'})
       }
       
       const exercid = parseInt(exerciseId, 10)
       const userid = parseInt(id, 10)
       const user = await setUser(userid)
-      const exercise = await user.getExercises({
-        where: {id: exercid},
-      })
+      const exercise = await user.getExercise({ id: exercid})
+
       res.status(200).send({ message: 'successful response', exercise })
+      
     } catch (e) {
       if (e.statusCode){
-        res.status(e.statusCode).send({message: e.message}) 
+        return res.status(e.statusCode).send({message: e.message}) 
       } else {
         res.status(400).send({message: e.message})
       } 
