@@ -1,7 +1,7 @@
 import {initModels as model} from '../../models'
 import * as jwt from 'jsonwebtoken'
 import { config } from './../../config/config'
-import { RecordNotFound } from '../../lib/errors'
+import { RecordNotFoundError } from '../../lib/errors'
 
 
 export default {
@@ -129,7 +129,7 @@ export default {
         include: [{model: model.Exercise}],
       })
       if (!user){
-        RecordNotFound('user not found')
+        return new RecordNotFoundError('user not found')
       }
       res.status(200).send({user})
     } catch (e) { 
@@ -145,7 +145,7 @@ export default {
     try {
       const { id } = req.params
       if (!id){
-        RecordNotFound('user not found')
+        return new RecordNotFoundError('user not found')
       }
       await model.User.update(req.body, { where: { id}})
       res.status(200).send({message: 'user updated successfully'})
@@ -161,7 +161,7 @@ export default {
     try {
       const { id } = req.params
       if (!id){
-        RecordNotFound('user not found')
+        return new RecordNotFoundError('user not found')
       }
       await model.User.destroy({where: {id}})
       res.status(200).send({message: 'user deleted successfully'})
@@ -179,7 +179,7 @@ export default {
       id = parseInt(id, 10)
       
       if (!id){
-        RecordNotFound('user notfound')
+        return new RecordNotFoundError('user notfound')
       }
       await model.User.update({confirmed: true}, { where: {id}})
       res.status(200).redirect('http://localhost:8080/api/v1/login')
@@ -197,7 +197,7 @@ export default {
       if (!email){ res.status(400).send({message: 'email cannot be empty'}) }
       const user = await model.User.findOne({email})
       
-      if (!user){ RecordNotFound('user does not exist') }
+      if (!user){ return new RecordNotFoundError('user does not exist') }
 
       const token = await model.User.generatePasswordResetToken(
         user.hashedpassword, 

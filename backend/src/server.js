@@ -5,7 +5,7 @@ import express from 'express';
 import routers from './routers';
 import {uninitModels, initModels} from './models'
 import { restrictCors } from './middlewares'
-import { RecordNotFound} from './lib/errors'
+import { RecordNotFoundError} from './lib/errors'
 
 
 (async() => {
@@ -44,7 +44,7 @@ import { RecordNotFound} from './lib/errors'
   // route to handle errors
   app.use((req, res, next) => {
    
-    const error = new RecordNotFound('Resource not found')  
+    const error = new RecordNotFoundError('Resource not found')  
     res.status(error.statusCode || 500).send({
       error: {
         status: error.statusCode || 500,
