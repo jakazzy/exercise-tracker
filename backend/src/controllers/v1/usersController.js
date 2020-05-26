@@ -122,8 +122,7 @@ export default {
         res.status(404).send({message: e.message})
       }
       res.status(400).send({message: e.message})
-    }
-    
+    }   
   },
 
   update: async(req, res) => {
@@ -161,14 +160,13 @@ export default {
   confirm: async(req, res) => {
     try {
       let {id } = jwt.verify(req.params.token, config.dev.jwt.secret)
-      id = parseInt(id, 10)
-      
+      id = parseInt(id, 10) 
       if (!id){
         return new RecordNotFoundError('user notfound')
       }
       await model.User.update({confirmed: true}, { where: {id}})
-      res.status(200).redirect('http://localhost:8080/api/v1/login')
-      
+
+      res.status(200).redirect('http://localhost:8080/api/v1/login') 
     } catch (e) {
       res.status(e.statusCode).send({message: e.message})
       res.status(400).send({message: e.message})
@@ -178,12 +176,9 @@ export default {
   sendResetPasswordEmail: async(req, res) => {
     try {
       const { email } = req.body
-
       if (!email){ res.status(400).send({message: 'email cannot be empty'}) }
-      const user = await model.User.findOne({email})
-      
+      const user = await model.User.findOne({email}) 
       if (!user){ return new RecordNotFoundError('user does not exist') }
-
       const token = await model.User.generatePasswordResetToken(
         user.hashedpassword, 
         user.id, 
@@ -191,6 +186,7 @@ export default {
       await model.User.resetPasswordMessage(
         user.id, email, user.username, token
       )
+      
       res.status(200).send({
         message: 'Follow instructions to change password in email',
       })
