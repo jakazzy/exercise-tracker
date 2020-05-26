@@ -5,10 +5,10 @@ export default (express) => {
   const router = express.Router()
 
   // exercises routes
-  // router.get(
-  // '/users/:id/exercises', 
-  // requireAuth, 
-  // v1.exercisesController.index);
+  router.get(
+    '/users/:id/exercises', 
+    requireAuth, 
+    v1.exercisesController.index);
 
   router.post(
     '/users/:id/exercises', 

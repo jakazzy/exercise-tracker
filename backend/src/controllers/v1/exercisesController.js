@@ -13,16 +13,17 @@ const setUser = id => {
 export default {
 
   index: async(req, res) => {
-    // try {
-    //   const items = await model.Exercise.findAndCountAll({
-    //     order: [['id', 'DESC']],
-    //   })
+    try {
+      const { id } = req.params
+      const userId = parseInt(id, 10)
+      const user = await setUser(userId)
+      const items = await user.getExercises() 
       
-    //   res.status(200).send(items);  
-    // } catch (error) {
-    //   // res.status(404).send({message: error.message})
-    // }
-   
+      res.status(200).send(items);  
+      
+    } catch (error) {
+      res.status(404).send({message: error.message})
+    } 
   },
 
   create: async(req, res) => {
@@ -54,7 +55,7 @@ export default {
       });
 
     } catch (e){
-      
+
       if (e.statusCode){
         res.status(e.statusCode).send({ message: e.message }) 
       } else {

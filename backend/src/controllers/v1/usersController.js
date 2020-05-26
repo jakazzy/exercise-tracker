@@ -144,9 +144,13 @@ export default {
   show: async(req, res) => {
     try {
       const { id } = req.params
-      const user = await model.User.findOne({ id })
+      const user = await model.User.findAll({ 
+        where: {id}, 
+        include: [{model: model.Exercise}], 
+        order: [['id', 'DESC']],
+      })
 
-      if (!user){
+      if (!user && user.length){
         return res.status(404).send({message: 'user not found'})
       }
 
