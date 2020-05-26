@@ -177,15 +177,15 @@ export default {
   delete: async(req, res) => {
     try {
       const { id } = req.params
+
       if (!id){
-        return new RecordNotFoundError('user not found')
+        return res.status(404).send({message: 'user not found'})
       }
+
       await model.User.destroy({where: {id}})
       res.status(200).send({message: 'user deleted successfully'})
     } catch (e) {
-      if (e.statusCode){
-        res.status(e.statusCode).send({message: e.message})
-      }
+     
       res.status(400).send({message: e.message})
     }
   },
