@@ -72,30 +72,38 @@ export default {
       if (!email){
         errors.push({message: 'email cannot be empty'})
       } 
+
       if (!hashedpassword){
         errors.push({message: 'password cannot be empty'})
       }
-      if (errors.length){
-        res.status(422).json(errors)
+
+      if (errors && errors.length){
+        return res.status(422).json(errors)
       }
-      const user = await model.User.findAll({
-        where: {email: `${email}`}})     
-      if (!user.length){
-        res.status(401).send({ auth: false, message: 'unauthorized'})
-      }  
-      if (user.confirmed){
-        res.status(400).send({
+
+      const user = await model.User.findOne({email})  
+
+      if (!user){
+        return res.status(401).send({ auth: false, message: 'unauthorized'})
+      }
+
+      if (!user.confirmed){
+        return res.status(422).send({
           auth: false, 
           message: 'Confirm your email to login'})
       }
-      const pwd = user[0].hashedpassword
-      const authValid = await model.User.authenticate(hashedpassword, pwd)
-      if (!authValid){
-        res.status(401).send({ auth: false, message: 'unauthorized'})
-      }
-      const jwt = await model.User.generateJWT({id: user[0].id})
 
-      res.status(200).send({ token: jwt, auth: true, user: user})   
+      const authValid = await model.User.authenticate(
+        hashedpassword, 
+        user.hashedpassword
+      )
+
+      if (!authValid){
+        return res.status(401).send({ auth: false, message: 'unauthorized'})
+      }
+      const token = await model.User.generateJWT({id: user.id})
+
+      res.status(200).send({ token, auth: true, user})   
     } catch (error) {
       res.status(400).send({message: error.message})
     }   
