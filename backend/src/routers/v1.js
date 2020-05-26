@@ -34,15 +34,15 @@ export default (express) => {
   router.post('/login', v1.usersController.login)
 
   // Users routes
-  // router.get('/users', v1.usersController.index)
+  router.get('/users', v1.usersController.index)
   router.get('/users/:id', v1.usersController.show)
   router.get('/confirmation/:token', v1.usersController.confirm)
   router.put('/users/:id', requireAuth, v1.usersController.update)
-  // router.delete('/users/:id', requireAuth, v1.usersController.delete)
-  // router.post('/reset', v1.usersController.sendResetPasswordEmail)
-  // router.post(
-  //   '/resetpassword/:userid/:token', 
-  //   v1.usersController.resetNewPassword)
+  router.delete('/users/:id', requireAuth, v1.usersController.delete)
+  router.post('/reset', v1.usersController.sendResetPasswordEmail)
+  router.post(
+    '/resetpassword/:userid/:token', 
+    v1.usersController.resetNewPassword)
 
   return router
 

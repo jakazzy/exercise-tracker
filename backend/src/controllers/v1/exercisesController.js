@@ -2,7 +2,7 @@ import { initModels as model } from '../../models'
 import { RecordNotFoundError } from './../../lib/errors'
 
 
-function setUser(id) {
+const setUser = id => {
   // eslint-disable-next-line no-undef
   return new Promise(async(resolve, reject) => {
     const user = await model.User.findByPk(id)   
@@ -25,14 +25,14 @@ export default {
    
   },
 
-  create: async(req, res, next) => {
+  create: async(req, res) => {
     try {
-      const {id} = req.params
+      const { id } = req.params
       const userId = parseInt(id, 10)
       const user = await setUser(userId)
-      const errors = []
       const description = req.body.description;
       const duration = req.body.duration;
+      const errors = []
 
       if (!description){
         errors.push({message: 'Description  cannot be empty'});
@@ -43,24 +43,23 @@ export default {
       }
 
       if (errors.length){
-        res.status(422).json(errors)
+        return res.status(422).json(errors)
       }
       
       let savedExercise = await user.createExercise(req.body)
+
       return res.status(201).send({ 
         message: 'successfully added', 
         exercise: savedExercise,
       });
 
     } catch (e){
-      console.log(e, '-----------------------------------------------');
-     
+      
       if (e.statusCode){
-        res.status(e.statusCode).send({ message: e.message, stack: e.stack}) 
-        next(e)
+        res.status(e.statusCode).send({ message: e.message }) 
       } else {
         res.status(400).send({message: e.message})
-        next(e)
+       
       }
       
     }
