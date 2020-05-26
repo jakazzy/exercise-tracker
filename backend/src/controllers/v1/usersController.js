@@ -15,47 +15,51 @@ export default {
       const goal = req.body.goal;
       const reminder = req.body.reminder;
       const errors = []
-      const user = await model.User.findAll({
-        where: {email: email}})
+      const user = await model.User.findOne({email})
       const password = await model.User.generatePasswords(hashedpassword)
-  
+      
       if (!username){
         errors.push({message: 'username cannot be empty'})
       }
+
       if (!email){
-        errors.push({ message: ' email cannot be empty'})
+        errors.push({ message: 'email cannot be empty'})
       }
+
       if (!hashedpassword){
         errors.push({message: 'Password cannot be empty'})
       }
+
       if (errors.length){
-        res.status(422).json(errors)
+        return res.status(422).json(errors)
       }
-      if (user && user.length){
+
+      if (user){
         return res.status(422)
           .send({auth: false, message: 'User already exist'});
       }
   
       const newUser = new model.User({
-        username: username,
-        email: email,
+        username,
+        email,
         hashedpassword: password,
-        phonenumber: phonenumber,
-        goal: goal,
-        reminder: reminder,
+        phonenumber,
+        goal,
+        reminder,
       });
-      let savedUser = await newUser.save();
+      const savedUser = await newUser.save();
       const payload = { id: savedUser.id}
       const jwt = await model.User.generateJWT(payload)  
       // confirm email
-      await model.User.confirmEmail(email, username, jwt)    
-      res.status(201).send(
-        { 
-          token: jwt, 
-          message: 'sign up successful. Activate account in email',
-        });      
+      await model.User.confirmEmail(email, username, jwt) 
+
+      res.status(201).send({ 
+        token: jwt, 
+        message: 'sign up successful. Activate account in email',
+      }); 
+
     } catch (e){ 
-      res.status(500).send({message: e.message})
+      res.status(400).send({message: e.message})
     } 
   },
 
@@ -109,10 +113,7 @@ export default {
   show: async(req, res) => {
     try {
       const { id } = req.params
-      const user = await model.User.findAll({
-        where: {id},
-        include: [{model: model.Exercise}],
-      })
+      const user = await model.User.findOne({id})
       if (!user){
         return new RecordNotFoundError('user not found')
       }

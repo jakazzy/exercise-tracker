@@ -1,27 +1,31 @@
 import { initModels as model } from '../../models'
 import { RecordNotFoundError } from './../../lib/errors'
 
-const setUser = async id => {
-  const user = await model.User.findByPk(id)
-  return user || new RecordNotFoundError('User not found')
-}
 
+function setUser(id) {
+  // eslint-disable-next-line no-undef
+  return new Promise(async(resolve, reject) => {
+    const user = await model.User.findByPk(id)   
+    return user ? 
+      resolve(user) : reject(new RecordNotFoundError('User not found.'))
+  })
+}
 export default {
 
   index: async(req, res) => {
-    try {
-      const items = await model.Exercise.findAndCountAll({
-        order: [['id', 'DESC']],
-      })
+    // try {
+    //   const items = await model.Exercise.findAndCountAll({
+    //     order: [['id', 'DESC']],
+    //   })
       
-      res.status(200).send(items);  
-    } catch (error) {
-      res.status(404).send({message: error.message})
-    }
+    //   res.status(200).send(items);  
+    // } catch (error) {
+    //   // res.status(404).send({message: error.message})
+    // }
    
   },
 
-  create: async(req, res) => {
+  create: async(req, res, next) => {
     try {
       const {id} = req.params
       const userId = parseInt(id, 10)
@@ -33,12 +37,15 @@ export default {
       if (!description){
         errors.push({message: 'Description  cannot be empty'});
       }
+
       if (!duration){
         errors.push({ message: 'Duration  cannot be empty'});
       }
+
       if (errors.length){
         res.status(422).json(errors)
       }
+      
       let savedExercise = await user.createExercise(req.body)
       return res.status(201).send({ 
         message: 'successfully added', 
@@ -46,11 +53,16 @@ export default {
       });
 
     } catch (e){
+      console.log(e, '-----------------------------------------------');
+     
       if (e.statusCode){
-        res.status(e.statusCode).send({ message: e.message}) 
+        res.status(e.statusCode).send({ message: e.message, stack: e.stack}) 
+        next(e)
       } else {
         res.status(400).send({message: e.message})
+        next(e)
       }
+      
     }
       
   },
@@ -91,8 +103,9 @@ export default {
     } catch (e) {
       if (e.statusCode){
         res.status(e.statusCode).send({message: e.message})
+      } else {
+        res.status(400).send({message: e.message}) 
       }
-      res.status(400).send({message: e.message})
     }   
   },
  

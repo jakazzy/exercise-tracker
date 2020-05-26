@@ -5,7 +5,7 @@ import express from 'express';
 import routers from './routers';
 import {uninitModels, initModels} from './models'
 import { restrictCors } from './middlewares'
-import { RecordNotFoundError} from './lib/errors'
+// import { RecordNotFoundError} from './lib/errors'
 
 
 (async() => {
@@ -27,7 +27,7 @@ import { RecordNotFoundError} from './lib/errors'
    
     await DB.sequelize.sync({
       force: true,
-      logging: console.log,
+      // logging: console.log,
     });
   } catch (error){
     console.log('connection to database failed', error);
@@ -42,16 +42,16 @@ import { RecordNotFoundError} from './lib/errors'
   app.use(restrictCors);
   app.use('/api/v1', routers.v1Router(express));
   // route to handle errors
-  app.use((req, res, next) => {
+  // app.use((req, res, next) => {
    
-    const error = new RecordNotFoundError('Resource not found')  
-    res.status(error.statusCode || 500).send({
-      error: {
-        status: error.statusCode || 500,
-        message: error.message || 'Internal Server Error',
-      }})
-  }
-  )
+  //   const error = new RecordNotFoundError('Resource not found')  
+  //   res.status(error.statusCode || 500).send({
+  //     error: {
+  //       status: error.statusCode || 500,
+  //       message: error.message || 'Internal Server Error',
+  //     }})
+  // }
+  // )
  
   app.listen(port, () => {
     console.log(`server running http://localhost:${ port }`);
