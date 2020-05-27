@@ -78,8 +78,8 @@ export default {
       const exercid = parseInt(exerciseId, 10)
       const userid = parseInt(id, 10)
       const user = await setUser(userid)
-      const exercise = await user.getExercise({ id: exercid})
-
+      const [exercise] = await user.getExercises({ where: {id: exercid}})
+      
       res.status(200).send({ message: 'successful response', exercise })
 
     } catch (e) {
@@ -102,12 +102,10 @@ export default {
 
       const exercId = parseInt(exerciseId, 10)
       const user = await setUser(id)
-      const exercise = await user.getExercise({ id: exercId})
-
+      const [exercise ] = await user.getExercises({where: {id: exercId}})
       exercise.description = description
       exercise.duration = duration
       await exercise.save()
-      // await model.Exercise.update(req.body, {where: {id: exercId}})
 
       res.status(200).send({message: 'exercise updated successfully'}) 
 

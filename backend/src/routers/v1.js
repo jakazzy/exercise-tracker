@@ -15,19 +15,19 @@ export default (express) => {
     requireAuth, 
     v1.exercisesController.create);
   // index
-  // router.get(
-  //   '/users/:id/exercises/:exerciseId', 
-  //   v1.exercisesController.show)
+  router.get(
+    '/users/:id/exercises/:exerciseId', 
+    v1.exercisesController.show)
 
-  // router.put(
-  //   '/users/:id/exercises/:exerciseId', 
-  //   requireAuth, 
-  //   v1.exercisesController.update)
+  router.put(
+    '/users/:id/exercises/:exerciseId', 
+    requireAuth, 
+    v1.exercisesController.update)
 
-  // router.delete(
-  //   '/users/:id/exercises/:exerciseId', 
-  //   requireAuth, 
-  //   v1.exercisesController.destroy)
+  router.delete(
+    '/users/:id/exercises/:exerciseId', 
+    requireAuth, 
+    v1.exercisesController.destroy)
 
   // Auth routes
   router.post('/signup', v1.usersController.create);
