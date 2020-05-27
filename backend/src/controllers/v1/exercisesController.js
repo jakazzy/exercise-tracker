@@ -129,10 +129,11 @@ export default {
       const exercId = parseInt(exerciseId, 10)
       const userId = parseInt(id, 10)
       const user = await setUser(userId)
-      const exercise = await user.getExercise({ id: exercId})
+      const [exercise] = await user.getExercises({ where: {id: exercId}})
       await exercise.destroy()
 
-      res.status(200).send({message: 'exercise deleted successfully'})    
+      res.status(200).send({message: 'exercise deleted successfully'}) 
+         
     } catch (e) {
       if (e.statusCode){
         res.status(e.statusCode).message({message: e.message})
