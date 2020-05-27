@@ -50,7 +50,7 @@ export default {
       const payload = { id: savedUser.id}
       const jwt = await model.User.generateJWT(payload)  
       // confirm email
-      await model.User.confirmEmail(email, username, jwt) 
+      await model.User.confirmEmail(savedUser, jwt) 
 
       res.status(201).send({ 
         token: jwt, 

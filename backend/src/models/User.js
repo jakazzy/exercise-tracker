@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
+import ejs from 'ejs'
 import { config } from '../config/config'
 import { initModels as models } from '.'
 import { transporter } from '../config/sendEmail'
@@ -23,23 +24,34 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
         {expiresIn: `${expiryPeriod}`})
     }
 
-    static async confirmEmail(email, username, token){
-
-      // Generate confirmation url
+    static async confirmEmail(user, token){
       const url = `http://localhost:8080/api/v1/confirmation/${token}`
-      const mailOptions = {
-        from: 'people international',
-        to: email,
-        subject: 'Confirm Email',
-        html: `Hello ${username},
-         <a href="${url}">click this link to activate account</a>`,
-      }
-       
- 
-      // send email
-      transporter.sendMail(mailOptions)
-        .then(data => { console.log('email sent successfully'); return data })
-        .catch(err => err)
+
+      ejs.renderFile(
+        __dirname + '/../mailtemplate/confirmation-instruction.ejs', 
+        { user, url},
+        (err, data) => {
+
+          if (err){ console.log(err) } else {
+            console.log(user.email)
+            // Generate email message
+            const mailOptions = {
+              from: 'people international',
+              to: user.email,
+              subject: 'Confirm Email',
+              html: data,
+            }
+
+            // send email using transporter
+            transporter.sendMail(mailOptions)
+              .then(data => {
+                console.log('email sent successfully'); 
+                return data 
+              })
+              .catch(err => console.log(err))
+          }
+        })
+     
     }
 
     static async generatePasswordResetToken(hash, id, createdAt){

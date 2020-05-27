@@ -6,6 +6,12 @@
     <title>Document</title>
 </head>
 <body>
-    <p>This is password reset email</p>
+
+    <% if(user && url){ %> 
+    <p> This is confirmation email</p>
+    <p> <span> Hello</span> <%= user.username %></p>
+    <a href=<%= url %>>click this link to activate account</a>
+    <% } %>
+
 </body>
 </html>
