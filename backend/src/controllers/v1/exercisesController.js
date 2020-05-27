@@ -57,7 +57,7 @@ export default {
     } catch (e){
 
       if (e.statusCode){
-        res.status(e.statusCode).send({ message: e.message }) 
+        return res.status(e.statusCode).send({ message: e.message }) 
       } else {
         res.status(400).send({message: e.message})
        
@@ -111,7 +111,7 @@ export default {
 
     } catch (e) {
       if (e.statusCode){
-        res.status(e.statusCode).send({message: e.message})
+        return res.status(e.statusCode).send({message: e.message})
       } else {
         res.status(400).send({message: e.message}) 
       }
@@ -133,10 +133,10 @@ export default {
       await exercise.destroy()
 
       res.status(200).send({message: 'exercise deleted successfully'}) 
-         
+
     } catch (e) {
       if (e.statusCode){
-        res.status(e.statusCode).message({message: e.message})
+        return res.status(e.statusCode).message({message: e.message})
       }
       res.status(400).send({message: e.message})
     }
