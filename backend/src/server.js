@@ -41,17 +41,11 @@ import { restrictCors } from './middlewares'
   app.use(bodyParser.json());
   app.use(restrictCors);
   app.use('/api/v1', routers.v1Router(express));
+  
   // route to handle errors
-  // app.use((req, res, next) => {
-   
-  //   const error = new RecordNotFoundError('Resource not found')  
-  //   res.status(error.statusCode || 500).send({
-  //     error: {
-  //       status: error.statusCode || 500,
-  //       message: error.message || 'Internal Server Error',
-  //     }})
-  // }
-  // )
+  app.use((req, res, next) => {
+    res.status(404).send({message: `The request: ${req.path} cannot be found` })
+  })
  
   app.listen(port, () => {
     console.log(`server running http://localhost:${ port }`);
