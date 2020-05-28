@@ -5,8 +5,6 @@ import express from 'express';
 import routers from './routers';
 import {uninitModels, initModels} from './models'
 import { restrictCors } from './middlewares'
-// import { RecordNotFoundError} from './lib/errors'
-
 
 (async() => {
   try {
@@ -41,6 +39,7 @@ import { restrictCors } from './middlewares'
   app.use(bodyParser.json());
   app.use(restrictCors);
   app.use('/api/v1', routers.v1Router(express));
+ 
   
   // route to handle errors
   app.use((req, res, next) => {

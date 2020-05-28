@@ -217,7 +217,7 @@ export default {
         user.createdAt)
 
       await model.User.resetPasswordMessage(
-        user.id, email, user.username, token
+        user.id, email, user, token
       )
       
       res.status(200).send({
@@ -253,6 +253,7 @@ export default {
     }
   },
 }
+
 
 // ref for reset passwor
 // https://ahrjarrett.com/posts/

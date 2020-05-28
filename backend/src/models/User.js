@@ -26,14 +26,15 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
 
     static async confirmEmail(user, token){
       const url = `http://localhost:8080/api/v1/confirmation/${token}`
-
+      
       ejs.renderFile(
         __dirname + '/../mailtemplate/confirmation-instruction.ejs', 
         { user, url},
         (err, data) => {
 
-          if (err){ console.log(err) } else {
-            console.log(user.email)
+          if (err){
+            console.log(err) 
+          } else {
             // Generate email message
             const mailOptions = {
               from: 'people international',
@@ -50,8 +51,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
               })
               .catch(err => console.log(err))
           }
-        })
-     
+        }) 
     }
 
     static async generatePasswordResetToken(hash, id, createdAt){
@@ -63,23 +63,34 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
       })
     }
 
-    static async resetPasswordMessage(id, email, username, token){
+    static async resetPasswordMessage(id, email, user, token){
       const url = `http://localhost:8080/api/v1/resetnewpassword/${id}/${token}`
-      const mailOptions = {
-        from: '',
-        to: email,
-        subject: 'Reset Password',
-        html: `Hello ${username},
-        <a href="${url}"> click on this link to reset password. </a>
-        Note that this linik is inactive after a day`,
-      }
-      transporter.sendMail(mailOptions)
-        .then(data => { console.log('email sent successfully'); return data; })
-        .catch(err => {
-          console.log(err);
+
+      ejs.renderFile(__dirname + '/../mailtemplate/reset-instruction.ejs', 
+        { user, url},
+        (err, data) => {
+
+          if (err){
+            console.log(err)
+
+          } else {
+            const mailOptions = {
+              from: '',
+              to: email,
+              subject: 'Reset Password',
+              html: data,
+            }
+
+            transporter.sendMail(mailOptions)
+              .then(data => { 
+                console.log('email sent successfully'); return data; 
+              })
+              .catch(err => {
+                console.log(err);
+              })
+          }
         })
-    }
-    
+    }  
   }
  
 

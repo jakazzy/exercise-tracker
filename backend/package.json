@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --exec babel-node src/server.js",
     "posttest": "eslint --ignore-path .gitignore .",
-    "fix": "npm run posttest -- --fix"
+    "fix": "npm run posttest -- --fix",
+    "gen": "postcss src/mailtemplate/css/tailwind.css -o src/mailtemplate/public/tailwind.css",
+    "watch": "postcss src/mailtemplate/css/tailwind.css -o src/mailtemplate/public/tailwind.css --watch"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
     "nodemailer": "^6.4.6",
     "pg": "^7.18.2",
     "pg-hstore": "^2.3.3",
+    "postcss-cli": "^7.1.1",
     "sequelize": "^5.21.6"
   },
   "devDependencies": {
