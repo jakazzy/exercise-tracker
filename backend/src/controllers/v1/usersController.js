@@ -15,8 +15,6 @@ export default {
       const goal = req.body.goal;
       const reminder = req.body.reminder;
       const errors = []
-      const user = await model.User.findOne({email})
-      const password = await model.User.generatePasswords(hashedpassword)
       
       if (!username){
         errors.push('username cannot be empty')
@@ -34,7 +32,10 @@ export default {
         return checkValidity(errors)
       }
 
-      if (user){
+      const user = await model.User.findOne({email})
+      const password = await model.User.generatePasswords(hashedpassword)
+
+      if (user && user.email === req.body.email){
         return res.status(422)
           .send({auth: false, message: 'User already exist'});
       }
@@ -47,22 +48,25 @@ export default {
         goal,
         reminder,
       });
+
       const savedUser = await newUser.save();
       const payload = { id: savedUser.id}
       const jwt = await model.User.generateJWT(payload)  
       // confirm email
       await model.User.confirmEmail(savedUser, jwt) 
 
-      res.status(201).send({ 
+      return res.status(201).send({ 
         token: jwt, 
         message: 'sign up successful. Activate account in email',
       }); 
 
     } catch (e){ 
+      console.log(e, 'check this');
+      
       if (e){
         return res.status(e.statusCode).send({ message: e.message})
       }
-      res.status(400).send({message: e.message})
+      return res.status(400).send({message: e.message})
     } 
   },
 
@@ -257,8 +261,6 @@ export default {
     }
   },
 }
-
-
 // ref for reset passwor
 // https://ahrjarrett.com/posts/
 // 2019-02-08-resetting-user-passwords-with-node-and-jwt

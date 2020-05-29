@@ -6,8 +6,7 @@ export default (express) => {
 
   // exercises routes
   router.get(
-    '/users/:id/exercises', 
-    requireAuth, 
+    '/users/:id/exercises',  
     v1.exercisesController.index);
 
   router.post(
