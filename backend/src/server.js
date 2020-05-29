@@ -6,7 +6,6 @@ import routers from './routers';
 import {uninitModels, initModels} from './models'
 import { restrictCors } from './middlewares'
 
-
 (async() => {
   try {
     uninitModels.forEach(({name, init, association}) => {  
@@ -25,8 +24,8 @@ import { restrictCors } from './middlewares'
 
    
     await DB.sequelize.sync({
-      // force: true,
-      logging: console.log,
+      force: true,
+      // logging: console.log,
     });
   } catch (error){
     console.log('connection to database failed', error);
@@ -40,7 +39,12 @@ import { restrictCors } from './middlewares'
   app.use(bodyParser.json());
   app.use(restrictCors);
   app.use('/api/v1', routers.v1Router(express));
-
+ 
+  
+  // route to handle errors
+  app.use((req, res, next) => {
+    res.status(404).send({message: `The request: ${req.path} cannot be found` })
+  })
  
   app.listen(port, () => {
     console.log(`server running http://localhost:${ port }`);

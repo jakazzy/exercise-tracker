@@ -10,6 +10,7 @@ export default (sequelize, Model, DataTypes) => {
     modelName: 'Exercise',
   }
   );
+ 
   return Exercise
 }
 
