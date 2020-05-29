@@ -1,6 +1,7 @@
 import {initModels as model} from '../../models'
 import * as jwt from 'jsonwebtoken'
 import { config } from './../../config/config'
+import { checkValidity } from '../../lib/errors'
 
 
 export default {
@@ -18,19 +19,19 @@ export default {
       const password = await model.User.generatePasswords(hashedpassword)
       
       if (!username){
-        errors.push({message: 'username cannot be empty'})
+        errors.push('username cannot be empty')
       }
 
       if (!email){
-        errors.push({ message: 'email cannot be empty'})
+        errors.push('email cannot be empty')
       }
 
       if (!hashedpassword){
-        errors.push({message: 'Password cannot be empty'})
+        errors.push('Password cannot be empty')
       }
 
       if (errors.length){
-        return res.status(422).json(errors)
+        return checkValidity(errors)
       }
 
       if (user){
@@ -58,6 +59,9 @@ export default {
       }); 
 
     } catch (e){ 
+      if (e){
+        return res.status(e.statusCode).send({ message: e.message})
+      }
       res.status(400).send({message: e.message})
     } 
   },
