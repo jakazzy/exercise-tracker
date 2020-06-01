@@ -98,7 +98,6 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
       validate: {
         notNull: {
           msg: 'Please enter your name',
@@ -116,10 +115,11 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
         },
       },
     },
-
+    facebookId: DataTypes.STRING,
+    twitterId: DataTypes.STRING,
+    
     hashedpassword: {
       type: DataTypes.STRING(),
-      allowNull: false,
       is:
        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/},
 
