@@ -4,7 +4,7 @@ import DB from './config/sequelize';
 import express from 'express';
 import routers from './routers';
 import {uninitModels, initModels} from './models'
-import { restrictCors } from './middlewares'
+import { restrictCors } from './middleware'
 import passport from 'passport'
 import { strategy } from './auth/strategies/facebook'
 
@@ -45,7 +45,10 @@ import { strategy } from './auth/strategies/facebook'
  
   // facebook auth
   strategy(app)
-  
+  // Home
+  app.get('/', (req, res) => {
+    res.status(200).send({message: 'Health ok'})
+  })
   // route to handle errors
   app.use((req, res, next) => {
     res.status(404).send({message: `The request: ${req.path} cannot be found` })

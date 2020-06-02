@@ -1,5 +1,5 @@
 import v1 from './../controllers/v1'
-import {requireAuth} from './../middlewares'
+import {requireAuth} from '../middleware'
 
 export default (express) => {
   const router = express.Router()

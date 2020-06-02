@@ -6,7 +6,7 @@ import { initModels as models } from '../../models'
 const FacebookStrategy = passportFacebook.Strategy
 
 export const strategy = (app) => {
-
+ 
   const options = {
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
@@ -17,6 +17,7 @@ export const strategy = (app) => {
 
   const verifyCallBack = async(accessToken, refreshToken, profile, done) => {
     try {
+      console.log('user here', profile)
       const user = await models.User.findOne({ 
         where: { facebookId: profile.id } })
 
@@ -32,6 +33,8 @@ export const strategy = (app) => {
       }
 
     } catch (err) {
+      console.log(err, '************************S');
+      
       return done(err)
     }
 
@@ -39,7 +42,7 @@ export const strategy = (app) => {
 
   passport.use(new FacebookStrategy(options, verifyCallBack))
 
-  app.get(`${process.env.BASE_API_URL}/auth/facebook`,
+  app.get('http://localhost:8080/api/v1/auth/facebook',
     passport.authenticate('facebook'))
 
   app.get(
