@@ -10,5 +10,8 @@ export const config = {
     jwt: {secret: process.env.MY_SECRET},
     user: process.env.AUTH_USER,
     pass: process.env.AUTH_PASS,
+    facebookAppId: process.env.FACEBOOK_APP_ID,
+    facebookAppSecret: process.env.FACEBOOK_APP_SECRET,
+    baseurl: process.env.BASE_URL,
   },
 };

@@ -1,23 +1,24 @@
 import passport from 'passport'
 import passportFacebook from 'passport-facebook'
-import 'dotenv/config';
-import { initModels as models } from '../../models'
+import { initModels as models } from '../../models/'
+import {config } from '../../config/config'
 
 const FacebookStrategy = passportFacebook.Strategy
+const con = config.dev
 
 export const strategy = (app) => {
- 
+  console.log(con.baseurl, '************************S');
+
   const options = {
-    clientID: process.env.FACEBOOK_APP_ID,
-    clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: `${process.env.SERVER_API_URL}/auth/facebook/callback`,
-    profileFields: ['id', 'displayName', 'name', 'emails'],
+    clientID: con.facebookAppId,
+    clientSecret: con.facebookAppSecret,
+    callbackURL: `${con.baseurl}/auth/facebook/callback`,
+    profileFields: ['id', 'displayName', 'name', 'photos', 'email'],
     enableProof: true,
   }
 
   const verifyCallBack = async(accessToken, refreshToken, profile, done) => {
     try {
-      console.log('user here', profile)
       const user = await models.User.findOne({ 
         where: { facebookId: profile.id } })
 
@@ -27,26 +28,23 @@ export const strategy = (app) => {
       } else {
         const newUser = new models.User({
           username: profile.displayName,
-          email: profile.emails[0],
+          email: profile.emails,
         });
         return done(null, newUser)
       }
 
-    } catch (err) {
-      console.log(err, '************************S');
-      
+    } catch (err) { 
       return done(err)
     }
-
   }
 
   passport.use(new FacebookStrategy(options, verifyCallBack))
 
-  app.get('http://localhost:8080/api/v1/auth/facebook',
-    passport.authenticate('facebook'))
+  app.get(`${con.baseurl}/auth/facebook`,
+    passport.authenticate('facebook', {authType: 'rerequest'}))
 
   app.get(
-    `${process.env.BASE_API_URL}/auth/facebook/callback`,
+    `${con.baseurl}/auth/facebook/callback`,
     passport.authenticate('facebook', { failureRedirect: '/login' }),
     async(req, res) => {
       const token = await models.User.generateJWT(req.user)

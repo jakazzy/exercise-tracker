@@ -2,7 +2,7 @@ import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 import ejs from 'ejs'
 import { config } from '../config/config'
-import { initModels as models } from '.'
+// import { initModels as models } from '.'
 import { transporter } from '../config/sendEmail'
 
 export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
@@ -106,8 +106,8 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
       unique: true,
+      allowNull: false,
       validate: {
         isEmail: true,
         notNull: {
@@ -140,21 +140,24 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
   }
   );
 
+  User.associate = function(models){
+
+    User.hasMany(models.Exercise, {
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',  
+      foreignKey: {
+        name: 'UserId',
+        allowNull: false,
+      }, 
+    });
+
+    // models.Exercise.belongsTo(User)
+  }
   
-  User.hasMany(models.Exercise, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',  
-    foreignKey: {
-      name: 'UserId',
-      allowNull: false,
-    }, 
-  });
-  models.Exercise.belongsTo(User)
 
   return User
 
 }
-
 
 // Reference: Stackoverflow
 // https://stackoverflow.com/questions/19605150/regex-for-

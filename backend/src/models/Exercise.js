@@ -11,6 +11,10 @@ export default (sequelize, Model, DataTypes) => {
   }
   );
  
+  Exercise.associate = function(models){
+    Exercise.belongsTo(models.User)
+  }
+  
   return Exercise
 }
 
