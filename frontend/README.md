@@ -1,1 +1,0 @@
-#### Locate it here: [exercise Tracker](https://github.com/jakazzy/exercise-tracker)
