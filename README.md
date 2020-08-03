@@ -38,6 +38,7 @@ DB_PASSWORD=your database password
 DB_PGDATABASE= your Database name
 DB_PORT=5432
 DB_HOST=host
+etc
 ```
 
 ## Running the tests
