@@ -50,5 +50,8 @@
     "eslint": "^7.0.0",
     "eslint-config-strongloop": "^2.1.0",
     "prettier": "^2.0.5"
+  },
+  "engines": {
+    "node": "12.8.1"
   }
 }
