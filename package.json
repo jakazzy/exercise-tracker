@@ -8,7 +8,7 @@
     "start": "nodemon --exec babel-node src/server.js",
     "clean": "rm -rf build && mkdir build",
     "build": "npm run clean && npm run build-babel",
-    "build-babel": "babel -d ./build ./src -s",
+    "build-babel": "babel-node -d ./build ./src -s",
     "posttest": "eslint --ignore-path .gitignore .",
     "fix": "npm run posttest -- --fix",
     "gen": "postcss src/mailtemplate/css/tailwind.css -o src/mailtemplate/public/tailwind.css",
