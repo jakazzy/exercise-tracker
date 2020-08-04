@@ -16,9 +16,6 @@ export default {
       const reminder = req.body.reminder;
       const errors = []
       
-      if (!username){
-        errors.push('username cannot be empty')
-      }
 
       if (!email){
         errors.push('email cannot be empty')

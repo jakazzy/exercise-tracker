@@ -97,7 +97,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
   User.init({
     username: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         notNull: {
           msg: 'Please enter your name',
