@@ -40,7 +40,7 @@ export const strategy = (app) => {
 
   passport.use(new FacebookStrategy(options, verifyCallBack))
 
-  app.get(`${con.baseurl}/auth/facebook`,
+  app.get(`/api/v1/auth/facebook`,
     passport.authenticate('facebook', {authType: 'rerequest'}))
 
   app.get(
