@@ -2,7 +2,6 @@ import {initModels as model} from '../../models'
 import * as jwt from 'jsonwebtoken'
 import { config } from './../../config/config'
 import { checkValidity } from '../../lib/errors'
-import { config } from '../../config/config'
 
 const con = config.dev
 export default {
