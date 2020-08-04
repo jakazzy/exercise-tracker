@@ -1,10 +1,10 @@
 import 'dotenv/config';
+import cors from 'cors'
 import bodyParser from 'body-parser';
 import DB from './config/sequelize';
 import express from 'express';
 import routers from './routers';
 import {uninitModels, initModels} from './models'
-import { restrictCors } from './middleware'
 import passport from 'passport'
 import { strategy } from './auth/strategies/facebook'
 
@@ -34,7 +34,7 @@ import { strategy } from './auth/strategies/facebook'
   
 
   app.use(bodyParser.json());
-  app.use(restrictCors);
+  app.use(cors());
   app.use('/api/v1', routers.v1Router(express));
   app.use(passport.initialize())
  
