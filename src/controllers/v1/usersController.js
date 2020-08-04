@@ -2,8 +2,9 @@ import {initModels as model} from '../../models'
 import * as jwt from 'jsonwebtoken'
 import { config } from './../../config/config'
 import { checkValidity } from '../../lib/errors'
+import { config } from '../../config/config'
 
-
+const con = config.dev
 export default {
   // authentication
   create: async(req, res) => {
@@ -124,7 +125,7 @@ export default {
 
       await model.User.update({confirmed: true}, { where: { id }})
 
-      res.status(302).redirect('http://localhost:8080/api/v1/login') 
+      res.status(302).redirect(`${con.baseurl}/login`) 
 
     } catch (e) {
       if (e.statusCode){
@@ -249,7 +250,7 @@ export default {
       if (user.id === id){
         const hash = await model.User.generatePasswords(req.body.hashedpassword)
         await model.User.update({hashedpassword: hash}, { where: { id}})
-        return res.status(200).redirect('http://localhost:8080/api/v1/login')
+        return res.status(200).redirect(`${con.baseurl}/login`)
       }
       return res.status(401).send({message: 'unauthorised'})
 
