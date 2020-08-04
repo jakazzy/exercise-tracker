@@ -98,11 +98,6 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
     username: {
       type: DataTypes.STRING,
       allowNull: true,
-      validate: {
-        notNull: {
-          msg: 'Please enter your name',
-        },
-      },
     },
     email: {
       type: DataTypes.STRING,
