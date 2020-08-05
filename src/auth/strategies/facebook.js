@@ -44,7 +44,7 @@ export const strategy = (app) => {
     passport.authenticate('facebook', {authType: 'rerequest'}))
 
   app.get(
-    `${con.baseurl}/auth/facebook/callback`,
+    `api/v1/auth/facebook/callback`,
     passport.authenticate('facebook', { failureRedirect: '/login' }),
     async(req, res) => {
       const token = await models.User.generateJWT(req.user)
