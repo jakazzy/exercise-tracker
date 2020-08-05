@@ -48,6 +48,7 @@ export const strategy = (app) => {
     passport.authenticate('facebook', { failureRedirect: '/login' }),
     async(req, res) => {
       const token = await models.User.generateJWT(req.user)
+      console.log('why is this callback not called');
       return res
         .status(200)
         // .cookie('jwt', models.User.generateJWT(req.user), {
