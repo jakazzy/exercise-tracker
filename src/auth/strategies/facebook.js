@@ -12,7 +12,7 @@ export const strategy = (app) => {
   const options = {
     clientID: con.facebookAppId,
     clientSecret: con.facebookAppSecret,
-    callbackURL: `${con.baseurl}/auth/facebook/callback`,
+    callbackURL: `https://xercise-tracker-app.herokuapp.com/api/v1/auth/facebook/callback`,
     profileFields: ['id', 'displayName', 'name', 'photos', 'email'],
     enableProof: true,
   }
