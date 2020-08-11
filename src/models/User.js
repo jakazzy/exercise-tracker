@@ -25,7 +25,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
     }
 
     static async confirmEmail(user, token){
-      const url = `http://localhost:8080/api/v1/confirmation/${token}`
+      const url = `${config.dev.baseurl}/confirmation/${token}`
       
       ejs.renderFile(
         __dirname + '/../mailtemplate/confirmation-instruction.ejs', 
@@ -93,7 +93,6 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
     }  
   }
  
-
   User.init({
     username: {
       type: DataTypes.STRING,

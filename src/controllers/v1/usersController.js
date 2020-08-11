@@ -60,7 +60,7 @@ export default {
     } catch (e){ 
       console.log(e, 'check this');
       
-      if (e){
+      if (e.statusCode){
         return res.status(e.statusCode).send({ message: e.message})
       }
       return res.status(400).send({message: e.message})

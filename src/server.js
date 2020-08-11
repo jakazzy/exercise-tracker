@@ -35,9 +35,11 @@ import { strategy } from './auth/strategies/facebook'
 
   app.use(bodyParser.json());
   app.use(cors());
-  app.use('/api/v1', routers.v1Router(express));
   app.use(passport.initialize())
- 
+  // app.use(passport.session());
+  app.use('/api/v1', routers.oauthRouter(express));
+  app.use('/api/v1', routers.v1Router(express));
+  
   // facebook auth
   strategy(app)
   
@@ -51,8 +53,9 @@ import { strategy } from './auth/strategies/facebook'
     res.status(404).send({message: `The request: ${req.path} cannot be found` })
   })
  
+
   app.listen(port, () => {
-    console.log(`server running http://localhost:${ port }`);
+    console.log(`server running on Port: ${ port }`);
     console.log('press CTRL+C to stop server');
   });
 })();

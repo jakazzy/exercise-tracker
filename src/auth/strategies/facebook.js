@@ -12,7 +12,7 @@ export const strategy = (app) => {
   const options = {
     clientID: con.facebookAppId,
     clientSecret: con.facebookAppSecret,
-    callbackURL: `https://xercise-tracker-app.herokuapp.com/api/v1/auth/facebook/callback`,
+    callbackURL: `${con.baseurl}/auth/facebook/callback`,
     profileFields: ['id', 'displayName', 'name', 'photos', 'email'],
     enableProof: true,
   }
@@ -34,30 +34,38 @@ export const strategy = (app) => {
       }
 
     } catch (err) { 
-      return done(err)
+     done(err, false, err.message)
     }
   }
 
   passport.use(new FacebookStrategy(options, verifyCallBack))
 
-  app.get(`/api/v1/auth/facebook`,
-    passport.authenticate('facebook', {authType: 'rerequest'}))
+  // passport.serializeUser(function(user, cb) {
+  //   cb(null, user);
+  // });
+  
+  // passport.deserializeUser(function(obj, cb) {
+  //   cb(null, obj);
+  // });
 
-  app.get(
-    `https://xercise-tracker-app.herokuapp.com/api/v1/auth/facebook/callback`,
-    passport.authenticate('facebook', { failureRedirect: '/login' }),
-    async(req, res) => {
-      const token = await models.User.generateJWT(req.user)
-      console.log('why is this callback not called');
-      return res
-        .status(200)
-        // .cookie('jwt', models.User.generateJWT(req.user), {
-        //   httpOnly: true,
-        // })
-        .send(token)
-        .redirect('/')
-    }
-  )
+  // app.get(`/api/v1/auth/facebook`,
+  //   passport.authenticate('facebook', {authType: 'rerequest'}))
+
+  // app.get(
+  //   `https://xercise-tracker-app.herokuapp.com/api/v1/auth/facebook/callback`,
+  //   passport.authenticate('facebook', { failureRedirect: '/login' }),
+  //   async(req, res) => {
+  //     const token = await models.User.generateJWT(req.user)
+  //     console.log('why is this callback not called');
+  //     return res
+  //       .status(200)
+  //       // .cookie('jwt', models.User.generateJWT(req.user), {
+  //       //   httpOnly: true,
+  //       // })
+  //       .send(token)
+  //       .redirect('/')
+  //   }
+  // )
     
   return app
 }
