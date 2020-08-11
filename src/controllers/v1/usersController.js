@@ -1,5 +1,7 @@
-import {initModels as model} from '../../models'
 import * as jwt from 'jsonwebtoken'
+import crypto from 'crypto-random-string'
+
+import {initModels as model} from '../../models'
 import { config } from './../../config/config'
 import { checkValidity } from '../../lib/errors'
 
@@ -36,7 +38,7 @@ export default {
         return res.status(422)
           .send({auth: false, message: 'User already exist'});
       }
-  
+      const secretToken= crypto({length: 10})
       const newUser = new model.User({
         username,
         email,
@@ -44,13 +46,14 @@ export default {
         phonenumber,
         goal,
         reminder,
+        secretToken
       });
 
       const savedUser = await newUser.save();
       const payload = { id: savedUser.id}
       const jwt = await model.User.generateJWT(payload)  
       // confirm email
-      await model.User.confirmEmail(savedUser, jwt) 
+      await model.User.confirmEmail(savedUser, secretToken) 
 
       return res.status(201).send({ 
         token: jwt, 
@@ -115,14 +118,18 @@ export default {
 
   confirm: async(req, res) => {
     try {
-      let { id } = jwt.verify(req.params.token, config.dev.jwt.secret)
-      id = parseInt(id, 10)
+      const secretToken = req.params.token
+     const user = await model.User.findOne({ secretToken})
 
-      if (!id){
+      if (!user){
         return res.status(404).send({message: 'user not found'})
       }
 
-      await model.User.update({confirmed: true}, { where: { id }})
+      if (user.confirmed=== true){
+        return res.status(202).send({message: "User already verified"})
+      }
+
+      await model.User.update({confirmed: true, secretToken: ''}, { where: { id: user.id }})
 
       res.status(302).redirect(`${con.baseurl}/login`) 
 
@@ -131,7 +138,7 @@ export default {
         return res.status(e.statusCode).send({message: e.message}) 
       }
 
-      return res.status(400).send({message: e.message})
+      return res.status(403).send({message: `verification failed : ${e.message}`})
     }
   },
 

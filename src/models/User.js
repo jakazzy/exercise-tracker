@@ -111,6 +111,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
     },
     facebookId: DataTypes.STRING,
     twitterId: DataTypes.STRING,
+    googleId: DataTypes.STRING,
     
     hashedpassword: {
       type: DataTypes.STRING(),
@@ -125,6 +126,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    secretToken: DataTypes.STRING,
     goal: DataTypes.INTEGER,
     reminder: DataTypes.BOOLEAN,
   },
