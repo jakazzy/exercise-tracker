@@ -10,12 +10,13 @@ export default {
   // authentication
   create: async(req, res) => {
     try {
-      const username = req.body.username;
-      const email = req.body.email;
-      const hashedpassword = req.body.hashedpassword;
-      const phonenumber = req.body.phonenumber;
-      const goal = req.body.goal;
-      const reminder = req.body.reminder;
+      const { 
+        username, 
+        email, 
+        hashedpassword, 
+        phonenumber, 
+        goal, 
+        reminder } = req.body
       const errors = []
       
 

@@ -1,5 +1,8 @@
 import v1 from './../controllers/v1'
 import {requireAuth} from '../middleware'
+import validate from '../lib/routeValidator'
+
+const { validateBody, schemas } = validate
 
 export default (express) => {
   const router = express.Router()
@@ -29,8 +32,8 @@ export default (express) => {
     v1.exercisesController.destroy)
 
   // Auth routes
-  router.post('/signup', v1.usersController.create);
-  router.post('/login', v1.usersController.login)
+  router.post('/signup', validateBody(schemas.authSchema), v1.usersController.create);
+  router.post('/login', validateBody(schemas.authSchema), v1.usersController.login)
 
   // Users routes
   router.get('/users', v1.usersController.index)
