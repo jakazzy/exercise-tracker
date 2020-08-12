@@ -62,6 +62,7 @@ export default {
       }); 
 
     } catch (e){ 
+
       console.log(e, 'check this');
       
       if (e.statusCode){
@@ -70,6 +71,7 @@ export default {
       return res.status(400).send({message: e.message})
     } 
   },
+
 
   login: async(req, res) => {
     try {
@@ -121,7 +123,11 @@ export default {
     try {
       const secretToken = req.params.token
      const user = await model.User.findOne({ secretToken})
-
+     const expDate = new Date(user.createdAt).getTime() + (1 * 24 * 60 * 60 * 1000) 
+     const currDate = new Date().getTime()
+      if (currDate > expDate){
+        return res.status( 404).send({message: 'Token  expired. Resend email to receive activation instructions'})
+      } 
       if (!user){
         return res.status(404).send({message: 'user not found'})
       }

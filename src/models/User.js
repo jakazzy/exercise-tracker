@@ -128,7 +128,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
     },
     secretToken: DataTypes.STRING,
     goal: DataTypes.INTEGER,
-    reminder: DataTypes.BOOLEAN,
+    reminder: DataTypes.BOOLEAN
   },
   {
     sequelize,
