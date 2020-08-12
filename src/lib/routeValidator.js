@@ -15,7 +15,7 @@ export default {
 
     schemas: {
         authSchema: Joi.object().keys({
-            username: Joi.string().min(6),
+            username: Joi.string().min(6).optional(),
             email: Joi.string().email().required(),
             hashedpassword: Joi.string().min(8).required()
         }),
