@@ -6,7 +6,7 @@ import express from 'express';
 import routers from './routers';
 import {uninitModels, initModels} from './models'
 import passport from 'passport'
-import { strategy } from './auth/strategies/facebook'
+
 
 (async() => {
   try {
@@ -40,8 +40,6 @@ import { strategy } from './auth/strategies/facebook'
   app.use('/api/v1', routers.oauthRouter(express));
   app.use('/api/v1', routers.v1Router(express));
   
-  // facebook auth
-  strategy(app)
   
   // Home
   app.get('/', (req, res) => {

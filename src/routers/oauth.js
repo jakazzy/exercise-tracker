@@ -1,39 +1,26 @@
 import passport from 'passport'
-import { initModels as models } from '../models'
+// import { initModels as models } from '../models'
 import '../auth/providers/google'
+import '../auth/providers/facebook'
 import v1 from '../controllers/v1'
 
 export default (express)=>{
  const router = express.Router()
 
-// router.get(`/auth/facebook`,
-//  passport.authenticate('facebook', {authType: 'rerequest'}))
 
+// router.get('/auth/facebook', passport.authenticate('facebook', { session: false, scope: ['profile', 'email']}))
 
-// router.get(`/auth/facebook/callback`,
-//     passport.authenticate('facebook', { failureRedirect: '/login' }),
-//     async(req, res) => {
-//         try {
-            
-//             // const token = await models.User.generateJWT(req.user)
-//             console.log(req.user, "**********************************************************");
-//             return res
-//               .status(200)
-//               // .cookie('jwt', models.User.generateJWT(req.user), {
-//               //   httpOnly: true,
-//               // })
-//               // .send(JSON.parse(token))
-//               .send({message: "message"})
-//               .redirect('/')
-//         } catch (error) {
-//             console.log(error, "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-//             res.status(400).send({message: error.message})
-//         }
-//     }
-//   )
-router.post('/auth/google', passport.authenticate('googleToken', { session: false, scope: ['profile', 'email']}))
+router.get('/auth/facebook',  passport.authenticate('facebook',  { scope : ['email'] }))
+
+router.get('/auth/facebook/callback', 
+    passport.authenticate('facebook', {session: false,  failureRedirect: '/login' }), 
+  v1.usersController.facebookOAuth)
+
+router.get('/auth/google', passport.authenticate('google', { session: false, scope: ['profile', 'email']}))
 router.get('/auth/google/callback', 
-    passport.authenticate('googleToken', {session: false,  failureRedirect: '/login' }), 
+    passport.authenticate('google', {session: false,  failureRedirect: '/login' }), 
   v1.usersController.googleOAuth)
+
+
   return router
 }

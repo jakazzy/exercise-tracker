@@ -15,6 +15,7 @@ const con = config.dev
 
   const verifyCallBack = async(accessToken, refreshToken, profile, done) => {
     try {
+      console.log("gooooooooooooooooooooooooooogle");
       const user = await models.User.findOne({
         where: {googleId: profile.id},
       })
@@ -22,7 +23,7 @@ const con = config.dev
       if (user && user.googleId){
         return done(null, user)
       } else {
-        const newUser = new models.User({
+        const newUser = await new models.User({
           username: profile.displayName,
           email: profile.emails[0].value,
           confirmed: true
@@ -36,7 +37,7 @@ const con = config.dev
     }
   }
 
-  passport.use('googleToken',new GoogleStrategy(options, verifyCallBack))
+  passport.use(new GoogleStrategy(options, verifyCallBack))
 
   
 

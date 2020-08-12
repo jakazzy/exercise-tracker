@@ -6,9 +6,6 @@ import {config } from '../../config/config'
 const FacebookStrategy = passportFacebook.Strategy
 const con = config.dev
 
-export const strategy = (app) => {
-  console.log(con.baseurl, '************************S');
-
   const options = {
     clientID: con.facebookAppId,
     clientSecret: con.facebookAppSecret,
@@ -18,6 +15,7 @@ export const strategy = (app) => {
   }
 
   const verifyCallBack = async(accessToken, refreshToken, profile, done) => {
+    console.log('aaaaaaaaaaaaaaaaaaaaayou there?');
     try {
       const user = await models.User.findOne({ 
         where: { facebookId: profile.id } })
@@ -26,10 +24,20 @@ export const strategy = (app) => {
         return done(null, user)
 
       } else {
+        // remember to take it out
+        console.log(profile, 'profffffffffffffffffffffffffffile');
+        
+        if (profile.emails === undefined){
+          throw new Error('Sorry you cannot sign in with Facebook')
+        }
+        const userEmail =  profile.emails[0].value
         const newUser = new models.User({
           username: profile.displayName,
-          email: profile.emails,
+          email: userEmail,
+          confirmed: true,
+          facebookId: profile.id
         });
+        await newUser.save()
         return done(null, newUser)
       }
 
@@ -40,13 +48,7 @@ export const strategy = (app) => {
 
   passport.use(new FacebookStrategy(options, verifyCallBack))
 
-  // passport.serializeUser(function(user, cb) {
-  //   cb(null, user);
-  // });
   
-  // passport.deserializeUser(function(obj, cb) {
-  //   cb(null, obj);
-  // });
 
   // app.get(`/api/v1/auth/facebook`,
   //   passport.authenticate('facebook', {authType: 'rerequest'}))
@@ -67,5 +69,3 @@ export const strategy = (app) => {
   //   }
   // )
     
-  return app
-}

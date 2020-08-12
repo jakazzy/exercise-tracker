@@ -308,10 +308,25 @@ export default {
 
   // OAuth
    googleOAuth: async(req, res) => {
-    const payload = { id: req.user.id}
-      const token = await models.User.generateJWT(payload)
-      return res.status(200).send(token).redirect('/')
-    }
+     try {
+       const payload = { id: req.user.id}
+         const token = await model.User.generateJWT(payload)
+         res.cookie('access_token', token, {httpOnly: true})
+         return res.status(200).send({ message: 'user authentication successful'})
+       
+     } catch (error) {
+       return res.status(400).send({ message: error.message})
+     }
+    },
+
+    facebookOAuth: async(req, res) => {
+      console.log('wheeeeeeeeeeeeeere areeeeeeeeeeee you?');
+      const payload = { id: req.user.id}
+        const token = await model.User.generateJWT(payload)
+        res.cookie('access_token', token, {httpOnly: true})
+        return res.status(200).send({ message: 'user authentication successful'})
+        // return res.status(200).send(token).redirect('/')
+      }
 }
 // ref for reset passwor
 // https://ahrjarrett.com/posts/
