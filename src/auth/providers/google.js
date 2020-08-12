@@ -15,25 +15,24 @@ const con = config.dev
 
   const verifyCallBack = async(accessToken, refreshToken, profile, done) => {
     try {
+      const user = await models.User.findOne({
+        where: {googleId: profile.id},
+      })
 
-      console.log(accessToken, 'accesstokennnnnnnnnnnnnnnnnnn');
-      console.log(refreshToken, 'refreshtokennnnnnnnnnnnnnnn');
-      console.log(profile, 'porfileeeeeeeeeeeeee');
-      // const user = await models.User.findOne({
-      //   where: {googleId: profile.id},
-      // })
+      if (user && user.googleId){
+        return done(null, user)
+      } else {
+        const newUser = new models.User({
+          username: profile.displayName,
+          email: profile.emails[0].value,
+          confirmed: true
+        })
 
-      // if (user && user.googleId){
-      //   return done(null, user)
-      // } else {
-      //   const newUser = new models.User({
-      //     username: profile.displayName,
-      //     email: profile.emails,
-      //   })
-      //   return done(null, newUser)
-      // }
+        await newUser.save()
+        return done(null, newUser)
+      }
     } catch (err) {
-      return done(err)
+      return done(err, false, err.message)
     }
   }
 

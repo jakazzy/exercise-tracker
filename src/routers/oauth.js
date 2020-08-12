@@ -1,6 +1,7 @@
 import passport from 'passport'
 import { initModels as models } from '../models'
-import '../auth/strategies/google'
+import '../auth/providers/google'
+import v1 from '../controllers/v1'
 
 export default (express)=>{
  const router = express.Router()
@@ -33,9 +34,6 @@ export default (express)=>{
 router.post('/auth/google', passport.authenticate('googleToken', { session: false, scope: ['profile', 'email']}))
 router.get('/auth/google/callback', 
     passport.authenticate('googleToken', {session: false,  failureRedirect: '/login' }), 
-    async(req, res) => {
-      const token = await models.User.generateJWT(req.user)
-      return res.status(200).send(token).redirect('/')
-    })
+  v1.usersController.googleOAuth)
   return router
 }

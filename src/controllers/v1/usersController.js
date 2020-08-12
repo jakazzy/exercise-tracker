@@ -271,7 +271,7 @@ export default {
       res.status(400).send({message: e.message})
     }
   },
-  
+
   resendactivation: async( req, res)=>{
     try {
       const { email } = req.body
@@ -304,7 +304,14 @@ export default {
     } catch (e) { 
       res.status(400).send({message: e.message})
     }
-  }
+  },
+
+  // OAuth
+   googleOAuth: async(req, res) => {
+    const payload = { id: req.user.id}
+      const token = await models.User.generateJWT(payload)
+      return res.status(200).send(token).redirect('/')
+    }
 }
 // ref for reset passwor
 // https://ahrjarrett.com/posts/

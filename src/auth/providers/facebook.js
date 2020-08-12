@@ -1,6 +1,6 @@
 import passport from 'passport'
 import passportFacebook from 'passport-facebook'
-import { initModels as models } from '../../models/'
+import { initModels as models } from '../../models'
 import {config } from '../../config/config'
 
 const FacebookStrategy = passportFacebook.Strategy
