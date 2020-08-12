@@ -18,6 +18,10 @@ export default {
             username: Joi.string().min(6),
             email: Joi.string().email().required(),
             hashedpassword: Joi.string().min(8).required()
+        }),
+        eactvateSchema: Joi.object().keys({  
+            email: Joi.string().email().required(),
+           
         })
     } 
 }

@@ -271,6 +271,7 @@ export default {
       res.status(400).send({message: e.message})
     }
   },
+  
   resendactivation: async( req, res)=>{
     try {
       const { email } = req.body
