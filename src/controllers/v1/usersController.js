@@ -271,6 +271,39 @@ export default {
       res.status(400).send({message: e.message})
     }
   },
+  resendactivation: async( req, res)=>{
+    try {
+      const { email } = req.body
+
+      if (!email){
+        return res.status(422).send({
+          message: 'email cannot be empty',
+        }) 
+      }
+
+      const user = await model.User.findOne({email}) 
+
+      if (!user){
+        return res.status(404).send({ 
+          message: 'user does not exist',
+        }) 
+      }
+      const secretToken= crypto({length: 10})
+      await model.User.update({ secretToken }, { where: { id: user.id }})
+      const payload = { id: user.id}
+      const jwt = await model.User.generateJWT(payload)  
+      // confirm email
+      await model.User.confirmEmail(user, secretToken) 
+
+      return res.status(201).send({ 
+        token: jwt, 
+        message: 'Account Activation insstructions sent to email',
+      }); 
+
+    } catch (e) { 
+      res.status(400).send({message: e.message})
+    }
+  }
 }
 // ref for reset passwor
 // https://ahrjarrett.com/posts/
