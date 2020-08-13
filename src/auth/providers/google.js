@@ -9,13 +9,14 @@ const con = config.dev
   const options = {
     clientID: con.googleAppId,
     clientSecret: con.googleAppSecret,
-    callbackURL: `${con.baseurl}/auth/google/callback`,
+    // callbackURL: `${con.baseurl}/auth/google/callback`,
     profileFields: ['id', 'displayName', 'name', 'photos', 'email'],
   }
 
   const verifyCallBack = async(accessToken, refreshToken, profile, done) => {
     try {
-      console.log("gooooooooooooooooooooooooooogle");
+      console.log(accessToken, 'accessToken');
+
       const user = await models.User.findOne({
         where: {googleId: profile.id},
       })

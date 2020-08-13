@@ -33,8 +33,8 @@ import passport from 'passport'
   const port = process.env.PORT || 8080;
   
 
-  app.use(bodyParser.json());
   app.use(cors());
+  app.use(bodyParser.json());
   app.use(passport.initialize())
   // app.use(passport.session());
   app.use('/api/v1', routers.oauthRouter(express));

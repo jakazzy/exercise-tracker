@@ -10,13 +10,12 @@ export default (express)=>{
 
 // router.get('/auth/facebook', passport.authenticate('facebook', { session: false, scope: ['profile', 'email']}))
 
-router.get('/auth/facebook',  passport.authenticate('facebook',  { scope : ['email'] }))
-
+router.post('/auth/facebook',  passport.authenticate('facebook',  { scope : ['email'] }))
 router.get('/auth/facebook/callback', 
     passport.authenticate('facebook', {session: false,  failureRedirect: '/login' }), 
   v1.usersController.facebookOAuth)
 
-router.get('/auth/google', passport.authenticate('google', { session: false, scope: ['profile', 'email']}))
+router.post('/auth/google', passport.authenticate('google', { session: false, scope: ['profile', 'email']}))
 router.get('/auth/google/callback', 
     passport.authenticate('google', {session: false,  failureRedirect: '/login' }), 
   v1.usersController.googleOAuth)

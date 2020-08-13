@@ -10,6 +10,7 @@ export default {
   // authentication
   create: async(req, res) => {
     try {
+      console.log(req.body, 'i see you data');
       const { 
         username, 
         email, 
