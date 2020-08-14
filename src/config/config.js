@@ -12,9 +12,9 @@ export const config = {
     pass: process.env.AUTH_PASS,
     facebookAppId: process.env.FACEBOOK_APP_ID,
     facebookAppSecret: process.env.FACEBOOK_APP_SECRET,
-    googleAppId: process.env.GOOGLE_APP_ID ,
-    googleAppSecret: process.env.GOOGLE_APP_SECRET ,
+    googleAppId: process.env.GOOGLE_APP_ID,
+    googleAppSecret: process.env.GOOGLE_APP_SECRET,
     baseurl: process.env.BASE_URL,
-    clienturl: process.env.CLIENT_URL ,
+    clienturl: process.env.CLIENT_URL,
   },
 };

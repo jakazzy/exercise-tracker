@@ -25,7 +25,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
     }
 
     static async confirmEmail(user, token){
-      const url = `${config.dev.baseurl}/confirmation/${token}`
+      const url = `${ config.dev.clienturl }/confirmation?token=${token}`
       
       ejs.renderFile(
         __dirname + '/../mailtemplate/confirmation-instruction.ejs', 
@@ -129,7 +129,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
     secretToken: DataTypes.STRING,
     goal: DataTypes.INTEGER,
     reminder: DataTypes.BOOLEAN,
-    remember:DataTypes.BOOLEAN
+    remember: DataTypes.BOOLEAN,
   },
   {
     sequelize,

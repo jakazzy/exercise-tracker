@@ -3,5 +3,5 @@ import oauthRouter from './oauth.js'
 
 export default {
   v1Router,
-  oauthRouter
+  oauthRouter,
 }
