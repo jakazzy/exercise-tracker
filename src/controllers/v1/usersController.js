@@ -244,13 +244,9 @@ export default {
         });
       }
 
-      const token = await model.User.generatePasswordResetToken(
-        user.hashedpassword,
-        user.id,
-        user.createdAt
-      );
+      const token = crypto({ length: 10 });
 
-      await model.User.resetPasswordMessage(user.id, email, user, token);
+      await model.User.resetPasswordMessage(email, user, token);
 
       res.status(200).send({
         message: 'Follow instructions to change password in email',

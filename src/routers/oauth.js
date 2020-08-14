@@ -1,25 +1,42 @@
-import passport from 'passport'
+import passport from 'passport';
 // import { initModels as models } from '../models'
-import '../auth/providers/google'
-import '../auth/providers/facebook'
-import v1 from '../controllers/v1'
+import '../auth/providers/google';
+import '../auth/providers/facebook';
+import v1 from '../controllers/v1';
 
 export default (express) => {
-  const router = express.Router()
+  const router = express.Router();
 
+  router.post(
+    '/auth/facebook',
+    passport.authenticate('facebook', { scope: ['email'] })
+  );
 
-  // router.get('/auth/facebook', passport.authenticate('facebook', { session: false, scope: ['profile', 'email']}))
+  router.get(
+    '/auth/facebook/callback',
+    passport.authenticate('facebook', {
+      session: false,
+      failureRedirect: '/login',
+    }),
+    v1.usersController.facebookOAuth
+  );
 
-  router.post('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }))
-  router.get('/auth/facebook/callback', 
-    passport.authenticate('facebook', {session: false, failureRedirect: '/login' }), 
-    v1.usersController.facebookOAuth)
+  router.post(
+    '/auth/google',
+    passport.authenticate('google', {
+      session: false,
+      scope: ['profile', 'email'],
+    })
+  );
 
-  router.post('/auth/google', passport.authenticate('google', { session: false, scope: ['profile', 'email']}))
-  router.get('/auth/google/callback', 
-    passport.authenticate('google', {session: false, failureRedirect: '/login' }), 
-    v1.usersController.googleOAuth)
+  router.get(
+    '/auth/google/callback',
+    passport.authenticate('google', {
+      session: false,
+      failureRedirect: '/login',
+    }),
+    v1.usersController.googleOAuth
+  );
 
-
-  return router
-}
+  return router;
+};
