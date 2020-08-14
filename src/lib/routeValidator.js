@@ -1,17 +1,18 @@
-import Joi from 'joi'
+import Joi from 'joi';
 
 export default {
   validateBody: (schema) => {
     return (req, res, next) => {
-      const result = schema.validate(req.body)
-      console.log(result, 'whats causing this');
-      if (result.error){
-        return res.status(400).send({ message: result.error})
+      const result = schema.validate(req.body);
+      if (result.error) {
+        return res.status(400).send({ message: result.error });
       }
-      if (!req.value){ req.value = {} }
-      req.value['body'] = result.value
-      next()
-    }
+      if (!req.value) {
+        req.value = {};
+      }
+      req.value['body'] = result.value;
+      next();
+    };
   },
 
   schemas: {
@@ -22,9 +23,8 @@ export default {
       phonenumber: Joi.string().optional(),
       remember: Joi.boolean().optional(),
     }),
-    eactvateSchema: Joi.object().keys({  
+    eactvateSchema: Joi.object().keys({
       email: Joi.string().email().required(),
-           
     }),
-  }, 
-}
+  },
+};

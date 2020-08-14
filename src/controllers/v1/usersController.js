@@ -10,7 +10,6 @@ export default {
   // authentication
   create: async (req, res) => {
     try {
-      console.log(req.body, 'i see you data');
       const {
         username,
         email,
@@ -63,8 +62,6 @@ export default {
         message: 'sign up successful. Activate account in email',
       });
     } catch (e) {
-      console.log(e, 'check this');
-
       if (e.statusCode) {
         return res.status(e.statusCode).send({ message: e.message });
       }
@@ -329,7 +326,6 @@ export default {
   },
 
   facebookOAuth: async (req, res) => {
-    console.log('wheeeeeeeeeeeeeere areeeeeeeeeeee you?');
     const payload = { id: req.user.id };
     const token = await model.User.generateJWT(payload);
     res.cookie('access_token', token, { httpOnly: true });
