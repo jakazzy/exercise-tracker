@@ -29,6 +29,7 @@ const verifyCallBack = async (accessToken, refreshToken, profile, done) => {
         throw new Error('Sorry you cannot sign in with Facebook');
       }
       const userEmail = profile.emails[0].value;
+
       const newUser = new models.User({
         username: profile.displayName,
         email: userEmail,

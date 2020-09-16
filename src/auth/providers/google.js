@@ -22,10 +22,15 @@ const verifyCallBack = async (accessToken, refreshToken, profile, done) => {
     if (user && user.googleId) {
       return done(null, user);
     } else {
+      if (profile.emails === undefined) {
+        throw new Error('Sorry you cannot sign in with Google');
+      }
+
       const newUser = await new models.User({
         username: profile.displayName,
         email: profile.emails[0].value,
         confirmed: true,
+        googleId: profile.id,
       });
 
       await newUser.save();
