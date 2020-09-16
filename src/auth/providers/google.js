@@ -9,7 +9,7 @@ const con = config.dev;
 const options = {
   clientID: con.googleAppId,
   clientSecret: con.googleAppSecret,
-  // callbackURL: `${con.baseurl}/auth/google/callback`,
+  callbackURL: `${con.baseurl}/auth/google/callback`,
   profileFields: ['id', 'displayName', 'name', 'photos', 'email'],
 };
 

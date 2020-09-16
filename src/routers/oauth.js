@@ -23,10 +23,9 @@ export default (express) => {
     // v1.usersController.facebookOAuthSuccess
   );
 
-  router.post(
+  router.get(
     '/auth/google',
     passport.authenticate('google', {
-      session: false,
       scope: ['profile', 'email'],
     })
   );
@@ -35,7 +34,8 @@ export default (express) => {
     '/auth/google/callback',
     passport.authenticate('google', {
       session: false,
-      failureRedirect: '/login',
+      successRedirect: `${config.dev.clienturl}/dashboard`,
+      failureRedirect: `${config.dev.clienturl}/login`,
     })
     // v1.usersController.googleOAuth
   );
