@@ -312,25 +312,44 @@ export default {
   },
 
   // OAuth
-  googleOAuth: async (req, res) => {
+  // googleOAuth: async (req, res) => {
+  //   try {
+  //     const payload = { id: req.user.id };
+  //     const token = await model.User.generateJWT(payload);
+  //     res.cookie('access_token', token, { httpOnly: true });
+  //     return res
+  //       .status(200)
+  //       .send({ message: 'user authentication successful' });
+  //   } catch (error) {
+  //     return res.status(400).send({ message: error.message });
+  //   }
+  // },
+
+  loginSuccess: async (req, res) => {
     try {
-      const payload = { id: req.user.id };
-      const token = await model.User.generateJWT(payload);
-      res.cookie('access_token', token, { httpOnly: true });
+      // const payload = { id: req.user.id };
+      // const token = await model.User.generateJWT(payload);
+      // res.cookie('access_token', token, { httpOnly: true });
+      console.log(
+        'Do you run in facebook?*************************************'
+      );
       return res
         .status(200)
         .send({ message: 'user authentication successful' });
+      // return res.status(200).send(token).redirect('/')
     } catch (error) {
+      console.log(
+        'Do you run in facebook?-----------------------------------------------'
+      );
       return res.status(400).send({ message: error.message });
     }
   },
 
-  facebookOAuth: async (req, res) => {
-    const payload = { id: req.user.id };
-    const token = await model.User.generateJWT(payload);
-    res.cookie('access_token', token, { httpOnly: true });
-    return res.status(200).send({ message: 'user authentication successful' });
-    // return res.status(200).send(token).redirect('/')
+  loginFail: async (req, res) => {
+    res.status(401).json({
+      success: false,
+      message: 'user failed to authenticate.',
+    });
   },
 };
 // ref for reset passwor

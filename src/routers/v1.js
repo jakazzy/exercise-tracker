@@ -59,5 +59,9 @@ export default (express) => {
     v1.usersController.resetNewPassword
   );
 
+  router.get('/loginsuccess', v1.usersController.loginSuccess);
+
+  // when login failed, send failed msg
+  router.get('/loginfailed', v1.usersController.loginFail);
   return router;
 };
