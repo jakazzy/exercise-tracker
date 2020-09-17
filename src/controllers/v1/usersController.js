@@ -110,7 +110,9 @@ export default {
       }
       const token = await model.User.generateJWT({ id: user.id });
 
-      res.status(200).send({ token, auth: true, user });
+      res
+        .status(200)
+        .send({ token, auth: true, user, message: 'Login successful' });
     } catch (error) {
       res.status(400).send({ message: error.message });
     }

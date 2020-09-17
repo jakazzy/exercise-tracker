@@ -20,7 +20,6 @@ export default (express) => {
       successRedirect: `${config.dev.clienturl}/dashboard`,
       failureRedirect: `${config.dev.clienturl}/login`,
     })
-    // v1.usersController.facebookOAuthSuccess
   );
 
   router.get(

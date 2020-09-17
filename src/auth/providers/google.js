@@ -40,5 +40,4 @@ const verifyCallBack = async (accessToken, refreshToken, profile, done) => {
     return done(err, false, err.message);
   }
 };
-
 passport.use(new GoogleStrategy(options, verifyCallBack));
