@@ -32,7 +32,18 @@ export default {
         return checkValidity(errors);
       }
 
-      const user = await model.User.findOne({ email });
+      const localAuthUser = await model.User.findOne({ email });
+      const googleAuthUser = await model.User.findOne({ googleEmail: email });
+      const facebookAuthUser = await model.User.findOne({
+        facebookEmail: email,
+      });
+      let user = localAuthUser.email && localAuthUser;
+
+      if (!localAuthUser.email) {
+        user = googleAuthUser || facebookAuthUser;
+        await model.User.update(req.body, { where: { id: user.id } });
+      }
+
       const password = await model.User.generatePasswords(hashedpassword);
 
       if (user && user.email === req.body.email) {

@@ -39,6 +39,15 @@ export default (express) => {
     // v1.usersController.googleOAuth
   );
 
+  // Connect the oauth accounts
+  router.get('/connect/facebook', passport.authorize('facebook'), {
+    session: false,
+  });
+
+  router.get('/connect/google', passport.authorize('google'), {
+    session: false,
+  });
+
   // When logout, redirect to client
   router.get('/logout', (req, res) => {
     req.logout();

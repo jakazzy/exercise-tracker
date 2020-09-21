@@ -113,8 +113,10 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
         },
       },
       facebookId: DataTypes.STRING,
+      facebookEmail: DataTypes.STRING,
       twitterId: DataTypes.STRING,
       googleId: DataTypes.STRING,
+      googleEmail: DataTypes.STRING,
 
       hashedpassword: {
         type: DataTypes.STRING(),
