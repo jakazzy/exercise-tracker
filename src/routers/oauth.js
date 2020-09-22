@@ -2,8 +2,9 @@ import passport from 'passport';
 // import { initModels as models } from '../models'
 import '../auth/providers/google';
 import '../auth/providers/facebook';
-// import v1 from '../controllers/v1';
+import v1 from '../controllers/v1';
 import { config } from '../config/config';
+import { requireAuth } from '../middleware';
 
 export default (express) => {
   const router = express.Router();
@@ -17,13 +18,14 @@ export default (express) => {
     '/auth/facebook/callback',
     passport.authenticate('facebook', {
       session: false,
-      successRedirect: `${config.dev.clienturl}/dashboard`,
       failureRedirect: `${config.dev.clienturl}/login`,
-    })
+    }),
+    v1.usersController.facebookOAuth
   );
 
   router.get(
     '/auth/google',
+    requireAuth,
     passport.authenticate('google', {
       scope: ['profile', 'email'],
     })
@@ -33,20 +35,20 @@ export default (express) => {
     '/auth/google/callback',
     passport.authenticate('google', {
       session: false,
-      successRedirect: `${config.dev.clienturl}/dashboard`,
       failureRedirect: `${config.dev.clienturl}/login`,
-    })
-    // v1.usersController.googleOAuth
+    }),
+    v1.usersController.googleOAuth
   );
 
   // Connect the oauth accounts
-  router.get('/connect/facebook', passport.authorize('facebook'), {
-    session: false,
-  });
+  // router.get('/connect/facebook', passport.authorize('facebook'), {
+  //   session: false,
+  // });
 
-  router.get('/connect/google', passport.authorize('google'), {
-    session: false,
-  });
+  // router.get('/connect/google', requireAuth, passport.authorize('google'), {
+  //   session: false,
+  //   scope: ['profile', 'email'],
+  // });
 
   // When logout, redirect to client
   router.get('/logout', (req, res) => {

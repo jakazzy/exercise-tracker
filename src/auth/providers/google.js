@@ -11,14 +11,22 @@ const options = {
   clientSecret: con.googleAppSecret,
   callbackURL: `${con.baseurl}/auth/google/callback`,
   profileFields: ['id', 'displayName', 'name', 'photos', 'email'],
+  passReqToCallback: true,
 };
 
-const verifyCallBack = async (accessToken, refreshToken, profile, done) => {
+const verifyCallBack = async (
+  req,
+  accessToken,
+  refreshToken,
+  profile,
+  done
+) => {
   try {
     const user = await models.User.findOne({
       where: { googleId: profile.id },
     });
 
+    // console.log('req.user', req.locals, '888888888888');
     if (user && user.googleId) {
       return done(null, user);
     } else {

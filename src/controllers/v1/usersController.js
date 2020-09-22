@@ -37,11 +37,13 @@ export default {
       const facebookAuthUser = await model.User.findOne({
         facebookEmail: email,
       });
-      let user = localAuthUser.email && localAuthUser;
+      let user = localAuthUser;
 
-      if (!localAuthUser.email) {
+      if (!localAuthUser) {
         user = googleAuthUser || facebookAuthUser;
-        await model.User.update(req.body, { where: { id: user.id } });
+        if (user) {
+          await model.User.update(req.body, { where: { id: user.id } });
+        }
       }
 
       const password = await model.User.generatePasswords(hashedpassword);
@@ -64,10 +66,11 @@ export default {
 
       const savedUser = await newUser.save();
       const payload = { id: savedUser.id };
-      const jwt = await model.User.generateJWT(payload);
+      const token = await model.User.generateJWT(payload);
+
       // confirm email
       await model.User.confirmEmail(savedUser, secretToken);
-
+      res.cookie('access_token', token);
       return res.status(201).send({
         token: jwt,
         message: 'sign up successful. Activate account in email',
@@ -120,7 +123,7 @@ export default {
         return res.status(401).send({ auth: false, message: 'unauthorized' });
       }
       const token = await model.User.generateJWT({ id: user.id });
-
+      res.cookie('access_token', token);
       res
         .status(200)
         .send({ token, auth: true, user, message: 'Login successful' });
@@ -325,19 +328,27 @@ export default {
   },
 
   // OAuth
-  // googleOAuth: async (req, res) => {
-  //   try {
-  //     const payload = { id: req.user.id };
-  //     const token = await model.User.generateJWT(payload);
-  //     res.cookie('access_token', token, { httpOnly: true });
-  //     return res
-  //       .status(200)
-  //       .send({ message: 'user authentication successful' });
-  //   } catch (error) {
-  //     return res.status(400).send({ message: error.message });
-  //   }
-  // },
+  googleOAuth: async (req, res) => {
+    try {
+      const payload = { id: req.user.id };
+      const token = await model.User.generateJWT(payload);
+      res.cookie('access_token', token, { httpOnly: true });
+      return res.status(300).redirect(`${config.dev.clienturl}/dashboard`);
+    } catch (error) {
+      return res.status(400).send({ message: error.message });
+    }
+  },
 
+  facebookOAuth: async (req, res) => {
+    try {
+      const payload = { id: req.user.id };
+      const token = await model.User.generateJWT(payload);
+      res.cookie('access_token', token, { httpOnly: true });
+      return res.status(300).redirect(`${config.dev.clienturl}/dashboard`);
+    } catch (error) {
+      return res.status(400).send({ message: error.message });
+    }
+  },
   loginSuccess: async (req, res) => {
     try {
       // const payload = { id: req.user.id };
@@ -351,9 +362,7 @@ export default {
         .send({ message: 'user authentication successful' });
       // return res.status(200).send(token).redirect('/')
     } catch (error) {
-      console.log(
-        'Do you run in facebook?-----------------------------------------------'
-      );
+      console.log('Do you run in facebook?-------------------------');
       return res.status(400).send({ message: error.message });
     }
   },
