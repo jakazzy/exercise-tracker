@@ -70,7 +70,7 @@ export default {
 
       // confirm email
       await model.User.confirmEmail(savedUser, secretToken);
-      res.cookie('access_token', token);
+      res.cookie('access_token', token, { httpOnly: true });
       return res.status(201).send({
         token: jwt,
         message: 'sign up successful. Activate account in email',
@@ -123,7 +123,7 @@ export default {
         return res.status(401).send({ auth: false, message: 'unauthorized' });
       }
       const token = await model.User.generateJWT({ id: user.id });
-      res.cookie('access_token', token);
+      res.cookie('access_token', token, { httpOnly: true });
       res
         .status(200)
         .send({ token, auth: true, user, message: 'Login successful' });
@@ -372,6 +372,19 @@ export default {
       success: false,
       message: 'user failed to authenticate.',
     });
+  },
+
+  loginStatus: async (req, res) => {
+    res.status(200).json({
+      success: true,
+      message: 'user is authenticated',
+    });
+  },
+
+  signOut: async (req, res) => {
+    req.logout();
+    res.clearCookie('access_token');
+    res.status(200).send({ success: true, message: 'user logged out' });
   },
 };
 // ref for reset passwor

@@ -22,12 +22,36 @@ const verifyCallBack = async (
   done
 ) => {
   try {
-    const user = await models.User.findOne({
+    // scenario 3 logged in user linking accounts(checking with accesstoken)
+    // scenario 1: check if user exists and auth with google
+    let user = await models.User.findOne({
       where: { googleId: profile.id },
     });
 
-    // console.log('req.user', req.locals, '888888888888');
-    if (user && user.googleId) {
+    const isUserEmail = !!profile.emails;
+
+    // scenario 2: check if user already exists and  local auth email
+    //  same as google email
+
+    if (!(user && user.googleId) && isUserEmail) {
+      user = await models.User.findOne({
+        where: { email: profile.emails[0].value },
+      });
+
+      if (user) {
+        await models.User.update(
+          {
+            username: profile.displayName,
+            email: profile.emails[0].value,
+            confirmed: true,
+            googleId: profile.id,
+          },
+          { where: { id: user.id } }
+        );
+      }
+    }
+    // return user from any of the two scenarios for an existing user ;
+    if ((user && user.googleId) || (user && user.email)) {
       return done(null, user);
     } else {
       if (profile.emails === undefined) {
@@ -40,7 +64,11 @@ const verifyCallBack = async (
         confirmed: true,
         googleId: profile.id,
       });
-
+      console.log(
+        '**************************************',
+        req.cookies['access_token'],
+        req.user
+      );
       await newUser.save();
       return done(null, newUser);
     }

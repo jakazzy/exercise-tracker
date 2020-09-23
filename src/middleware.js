@@ -18,11 +18,13 @@ export const requireAuth = async (req, res, next) => {
     }
 
     const decoded = await jwt.verify(token, config.dev.jwt.secret);
-    // if (decoded.id !== parseInt(req.params.id, 10)) {
-    //   return res.status(403).send({ message: 'Forbidden' });
-    // }
-    req.userId = decoded.id;
-    res.userId = decoded.id;
+    if (req.params.id) {
+      if (decoded.id !== parseInt(req.params.id, 10)) {
+        return res.status(403).send({ message: 'Forbidden' });
+      }
+    }
+
+    req.locals['userId'] = decoded.id;
     // req.locals.userId = decoded.id;
     return next();
   } catch (error) {

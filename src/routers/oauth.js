@@ -25,7 +25,6 @@ export default (express) => {
 
   router.get(
     '/auth/google',
-    requireAuth,
     passport.authenticate('google', {
       scope: ['profile', 'email'],
     })
@@ -44,17 +43,33 @@ export default (express) => {
   // router.get('/connect/facebook', passport.authorize('facebook'), {
   //   session: false,
   // });
-
-  // router.get('/connect/google', requireAuth, passport.authorize('google'), {
+  // router.get('/connect/facebook/callback', passport.authorize('facebook'), {
   //   session: false,
-  //   scope: ['profile', 'email'],
   // });
 
-  // When logout, redirect to client
-  router.get('/logout', (req, res) => {
-    req.logout();
-    res.redirect(`${config.dev.clienturl}/login`);
-  });
+  router.get(
+    '/connect/google',
+    requireAuth,
+    passport.authorize('google', {
+      session: false,
+      scope: ['profile', 'email'],
+    })
+  );
 
+  router.get(
+    '/connect/google/callback',
+    requireAuth,
+    passport.authorize('google', {
+      session: false,
+      successRedirect: '/profile',
+      failureRedirect: '/',
+    })
+  );
+
+  // When logout, redirect to client
+  router.get('/logout', v1.usersController.signOut);
+
+  // check status
+  router.get('/checkstatus', requireAuth, v1.usersController.loginStatus);
   return router;
 };
