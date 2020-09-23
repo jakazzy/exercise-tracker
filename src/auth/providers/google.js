@@ -30,7 +30,7 @@ const verifyCallBack = async (
 
     const isUserEmail = !!profile.emails;
 
-    // scenario 2: check if user already exists and  local auth email
+    // scenario 2: check if user already exists and has local auth email
     //  same as google email
 
     if (!(user && user.googleId) && isUserEmail) {
@@ -38,11 +38,16 @@ const verifyCallBack = async (
         where: { email: profile.emails[0].value },
       });
 
+      if (!user) {
+        await models.User.findOne({
+          where: { facebookEmail: profile.emails[0].value },
+        });
+      }
       if (user) {
         await models.User.update(
           {
             username: profile.displayName,
-            email: profile.emails[0].value,
+            googleEmail: profile.emails[0].value,
             confirmed: true,
             googleId: profile.id,
           },
@@ -60,7 +65,7 @@ const verifyCallBack = async (
 
       const newUser = await new models.User({
         username: profile.displayName,
-        email: profile.emails[0].value,
+        googleEmail: profile.emails[0].value,
         confirmed: true,
         googleId: profile.id,
       });

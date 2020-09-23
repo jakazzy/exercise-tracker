@@ -12,15 +12,51 @@ const options = {
   callbackURL: `${con.baseurl}/auth/facebook/callback`,
   profileFields: ['id', 'displayName', 'name', 'photos', 'email'],
   enableProof: true,
+  passReqToCallback: true,
 };
 
-const verifyCallBack = async (accessToken, refreshToken, profile, done) => {
+const verifyCallBack = async (
+  req,
+  accessToken,
+  refreshToken,
+  profile,
+  done
+) => {
   try {
-    const user = await models.User.findOne({
+    // scenario 3 logged in user linking accounts(checking with accesstoken)
+    // scenario 1: check if user exists and auth with facebook
+    let user = await models.User.findOne({
       where: { facebookId: profile.id },
     });
 
-    if (user && user.facebookId) {
+    const isUserEmail = !!profile.emails;
+
+    // scenario 2: check if user already exists and has local auth email
+    //  same as facebook email
+    if (!(user && user.facebookId) && isUserEmail) {
+      user = await models.User.findOne({
+        where: { email: profile.emails[0].value },
+      });
+
+      if (!user) {
+        await models.User.findOne({
+          where: { googleEmail: profile.emails[0].value },
+        });
+      }
+      if (user) {
+        await models.User.update(
+          {
+            username: profile.displayName,
+            facebookEmail: profile.emails[0].value,
+            confirmed: true,
+            facebookId: profile.id,
+          },
+          { where: { id: user.id } }
+        );
+      }
+    }
+    // return user from any of the two scenarios for an existing user
+    if ((user && user.facebookId) || (user && user.email)) {
       return done(null, user);
     } else {
       // remember to take it out
@@ -28,14 +64,14 @@ const verifyCallBack = async (accessToken, refreshToken, profile, done) => {
       if (profile.emails === undefined) {
         throw new Error('Sorry you cannot sign in with Facebook');
       }
-      const userEmail = profile.emails[0].value;
 
       const newUser = new models.User({
         username: profile.displayName,
-        email: userEmail,
+        facebookEmail: profile.emails[0].value,
         confirmed: true,
         facebookId: profile.id,
       });
+
       await newUser.save();
       return done(null, newUser);
     }
