@@ -1,5 +1,6 @@
 import passport from 'passport';
 import passportGoogleOauth20 from 'passport-google-oauth20';
+import * as jwt from 'jsonwebtoken';
 import { config } from '../../config/config';
 import { initModels as models } from '../../models';
 
@@ -22,60 +23,78 @@ const verifyCallBack = async (
   done
 ) => {
   try {
-    // scenario 3 logged in user linking accounts(checking with accesstoken)
-    // scenario 1: check if user exists and auth with google
-    let user = await models.User.findOne({
-      where: { googleId: profile.id },
-    });
-
-    const isUserEmail = !!profile.emails;
-
-    // scenario 2: check if user already exists and has local auth email
-    //  same as google email
-
-    if (!(user && user.googleId) && isUserEmail) {
-      user = await models.User.findOne({
-        where: { email: profile.emails[0].value },
+    // scenario 1 logged in user linking accounts(checking with accesstoken)
+    if (!req.cookies['access_token']) {
+      // scenario 2: check if user exists and auth with google
+      let user = await models.User.findOne({
+        where: { googleId: profile.id },
       });
 
-      if (!user) {
-        await models.User.findOne({
-          where: { facebookEmail: profile.emails[0].value },
+      const isUserEmail = !!profile.emails;
+
+      // scenario 3: check if user already exists and has local auth email
+      //  same as google email
+
+      if (!(user && user.googleId) && isUserEmail) {
+        user = await models.User.findOne({
+          where: { email: profile.emails[0].value },
         });
-      }
-      if (user) {
-        await models.User.update(
-          {
-            username: profile.displayName,
-            googleEmail: profile.emails[0].value,
-            confirmed: true,
-            googleId: profile.id,
-          },
-          { where: { id: user.id } }
-        );
-      }
-    }
-    // return user from any of the two scenarios for an existing user ;
-    if ((user && user.googleId) || (user && user.email)) {
-      return done(null, user);
-    } else {
-      if (profile.emails === undefined) {
-        throw new Error('Sorry you cannot sign in with Google');
-      }
 
-      const newUser = await new models.User({
-        username: profile.displayName,
-        googleEmail: profile.emails[0].value,
-        confirmed: true,
-        googleId: profile.id,
-      });
-      console.log(
-        '**************************************',
-        req.cookies['access_token'],
-        req.user
+        if (!user) {
+          await models.User.findOne({
+            where: { facebookEmail: profile.emails[0].value },
+          });
+        }
+        if (user) {
+          await models.User.update(
+            {
+              username: profile.displayName,
+              googleEmail: profile.emails[0].value,
+              confirmed: true,
+              googleId: profile.id,
+            },
+            { where: { id: user.id } }
+          );
+        }
+      }
+      // return user from any of the two scenarios for an existing user ;
+      if ((user && user.googleId) || (user && user.email)) {
+        return done(null, user);
+      } else {
+        if (profile.emails === undefined) {
+          throw new Error('Sorry you cannot sign in with Google');
+        }
+
+        const newUser = await new models.User({
+          username: profile.displayName,
+          googleEmail: profile.emails[0].value,
+          confirmed: true,
+          googleId: profile.id,
+        });
+        console.log(
+          '**************************************',
+          req.cookies['access_token'],
+          req.user
+        );
+        await newUser.save();
+        return done(null, newUser);
+      }
+    } else {
+      const token = req.cookies['access_token'];
+      const decoded = await jwt.verify(token, config.dev.jwt.secret);
+
+      const existingUser = await models.User.update(
+        {
+          username: profile.displayName,
+          googleEmail: profile.emails[0].value,
+          confirmed: true,
+          googleId: profile.id,
+        },
+        {
+          where: { id: decoded.id },
+        }
       );
-      await newUser.save();
-      return done(null, newUser);
+      return done(null, existingUser);
     }
   } catch (err) {
     return done(err, false, err.message);
