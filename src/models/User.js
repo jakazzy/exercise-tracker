@@ -58,7 +58,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
       );
     }
 
-    static async inviteFriends(inviteData) {
+    static async inviteFriend(inviteData) {
       const url = `${config.dev.clienturl}/signup`;
       ejs.renderFile(
         __dirname + '/../mailtemplate/invite-friend.ejs',
@@ -74,7 +74,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
             const mailOptions = {
               from: 'people international',
               to: inviteData.email,
-              subject: 'Email Invite to join us',
+              subject: `${inviteData.friend} is inviting you to join us`,
               html: data,
             };
 

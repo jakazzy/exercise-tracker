@@ -429,10 +429,12 @@ export default {
       const data = { friend: user.username, email: req.body.email };
 
       await model.User.inviteFriend(data);
-      res
-        .status(200)
-        .send({ message: `Invite successfully sent to email ${data.email}` });
+      res.status(200).send({
+        message: `Invite successfully sent to email ${data.email}`,
+        success: true,
+      });
     } catch (e) {
+      console.log(e, 'errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
       res.status(400).send({ message: e.message });
     }
   },

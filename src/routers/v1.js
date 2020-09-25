@@ -64,5 +64,7 @@ export default (express) => {
   router.put('/settings', v1.usersController.settings);
   // when login failed, send failed msg
   router.get('/loginfailed', v1.usersController.loginFail);
+
+  router.post('/invitefriend', requireAuth, v1.usersController.inviteFriend);
   return router;
 };
