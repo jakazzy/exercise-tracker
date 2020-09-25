@@ -58,6 +58,39 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
       );
     }
 
+    static async inviteFriends(inviteData) {
+      const url = `${config.dev.clienturl}/signup`;
+      ejs.renderFile(
+        __dirname + '/../mailtemplate/invite-friend.ejs',
+        {
+          inviteData,
+          url,
+        },
+        (err, data) => {
+          if (err) {
+            console.log(err);
+          } else {
+            // Generate email message
+            const mailOptions = {
+              from: 'people international',
+              to: inviteData.email,
+              subject: 'Email Invite to join us',
+              html: data,
+            };
+
+            // send email using transporter
+            transporter
+              .sendMail(mailOptions)
+              .then((data) => {
+                console.log('email sent successfully');
+                return data;
+              })
+              .catch((err) => console.log(err));
+          }
+        }
+      );
+    }
+
     static async generatePasswordResetToken(hash, id, createdAt) {
       const secret = `${hash}-${createdAt}`;
 
