@@ -414,6 +414,28 @@ export default {
       res.status(400).send({ message: e.message });
     }
   },
+
+  inviteFriend: async (req, res) => {
+    try {
+      const token = req.cookies['access_token'];
+      const payload = await model.User.verifyJWT(token);
+      const id = payload.id;
+
+      if (!id) {
+        return res.status(404).send({ message: 'user not found' });
+      }
+
+      const user = await model.User.findByPk(id);
+      const data = { friend: user.username, email: req.body.email };
+
+      await model.User.inviteFriend(data);
+      res
+        .status(200)
+        .send({ message: `Invite successfully sent to email ${data.email}` });
+    } catch (e) {
+      res.status(400).send({ message: e.message });
+    }
+  },
 };
 
 // ref for reset passwor
