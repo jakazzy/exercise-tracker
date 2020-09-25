@@ -114,10 +114,11 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
       },
       facebookId: DataTypes.STRING,
       facebookEmail: DataTypes.STRING,
-      twitterId: DataTypes.STRING,
       googleId: DataTypes.STRING,
       googleEmail: DataTypes.STRING,
-
+      isFacebookAuth: { type: DataTypes.BOOLEAN, defaultValue: false },
+      isGoogleAuth: { type: DataTypes.BOOLEAN, defaultValue: false },
+      isLocalAuth: { type: DataTypes.BOOLEAN, defaultValue: false },
       hashedpassword: {
         type: DataTypes.STRING(),
         // eslint-disable-next-line max-len

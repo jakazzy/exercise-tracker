@@ -24,7 +24,7 @@ const verifyCallBack = async (
 ) => {
   try {
     // scenario 1 logged in user linking accounts(checking with accesstoken)
-    if (!req.cookies['access_token']) {
+    if (!req.lookies) {
       // scenario 2: check if user exists and auth with google
       let user = await models.User.findOne({
         where: { googleId: profile.id },
@@ -52,6 +52,7 @@ const verifyCallBack = async (
               googleEmail: profile.emails[0].value,
               confirmed: true,
               googleId: profile.id,
+              isGoogleAuth: true,
             },
             { where: { id: user.id } }
           );
@@ -70,6 +71,7 @@ const verifyCallBack = async (
           googleEmail: profile.emails[0].value,
           confirmed: true,
           googleId: profile.id,
+          isGoogleAuth: true,
         });
         console.log(
           '**************************************',
@@ -89,6 +91,7 @@ const verifyCallBack = async (
           googleEmail: profile.emails[0].value,
           confirmed: true,
           googleId: profile.id,
+          isGoogleAuth: true,
         },
         {
           where: { id: decoded.id },

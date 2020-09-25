@@ -42,7 +42,10 @@ export default {
       if (!localAuthUser) {
         user = googleAuthUser || facebookAuthUser;
         if (user) {
-          await model.User.update(req.body, { where: { id: user.id } });
+          await model.User.update(
+            { ...req.body, isLocalAuth: true },
+            { where: { id: user.id } }
+          );
         }
       }
 
@@ -62,11 +65,13 @@ export default {
         goal,
         reminder,
         secretToken,
+        isLocalAuth: true,
       });
 
       const savedUser = await newUser.save();
       const payload = { id: savedUser.id };
       const token = await model.User.generateJWT(payload);
+      const { isFacebookAuth, isGoogleAuth, isLocalAuth } = savedUser;
 
       // confirm email
       await model.User.confirmEmail(savedUser, secretToken);
@@ -74,6 +79,9 @@ export default {
       return res.status(201).send({
         token: jwt,
         message: 'sign up successful. Activate account in email',
+        facebook: isFacebookAuth,
+        google: isGoogleAuth,
+        local: isLocalAuth,
       });
     } catch (e) {
       if (e.statusCode) {
@@ -217,8 +225,8 @@ export default {
         return res.status(404).send({ message: 'user not found' });
       }
 
-      await model.User.update(req.body, { where: { id } });
-      res.status(200).send({ message: 'user updated successfully' });
+      const user = await model.User.update(req.body, { where: { id } });
+      res.status(200).send({ message: 'user updated successfully', user });
     } catch (e) {
       res.status(400).send({ message: e.message });
     }
@@ -375,9 +383,11 @@ export default {
   },
 
   loginStatus: async (req, res) => {
+    const token = req.cookies['access_token'];
     res.status(200).json({
-      success: true,
+      isAuthenticated: true,
       message: 'user is authenticated',
+      token,
     });
   },
 
