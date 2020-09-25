@@ -219,7 +219,9 @@ export default {
 
   update: async (req, res) => {
     try {
-      const { id } = req.params;
+      const token = req.cookies['access_token'];
+      const payload = await model.User.verifyJWT(token);
+      const id = payload.id;
 
       if (!id) {
         return res.status(404).send({ message: 'user not found' });
@@ -396,7 +398,24 @@ export default {
     res.clearCookie('access_token');
     res.status(200).send({ success: true, message: 'user logged out' });
   },
+  settings: async (req, res) => {
+    try {
+      const token = req.cookies['access_token'];
+      const payload = await model.User.verifyJWT(token);
+      const id = payload.id;
+
+      if (!id) {
+        return res.status(404).send({ message: 'user not found' });
+      }
+
+      const user = await model.User.update(req.body, { where: { id } });
+      res.status(200).send({ message: 'user updated successfully', user });
+    } catch (e) {
+      res.status(400).send({ message: e.message });
+    }
+  },
 };
+
 // ref for reset passwor
 // https://ahrjarrett.com/posts/
 // 2019-02-08-resetting-user-passwords-with-node-and-jwt

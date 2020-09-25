@@ -70,6 +70,7 @@ const verifyCallBack = async (
 
         const newUser = new models.User({
           username: profile.displayName,
+          email: profile.emails[0].value,
           facebookEmail: profile.emails[0].value,
           confirmed: true,
           facebookId: profile.id,

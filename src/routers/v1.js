@@ -51,7 +51,7 @@ export default (express) => {
     validateBody(schemas.eactvateSchema),
     v1.usersController.resendactivation
   );
-  router.put('/users/:id', requireAuth, v1.usersController.update);
+  router.put('/users/:token', requireAuth, v1.usersController.update);
   router.delete('/users/:id', requireAuth, v1.usersController.delete);
   router.post('/reset', v1.usersController.sendResetPasswordEmail);
   router.post(
@@ -61,6 +61,7 @@ export default (express) => {
 
   router.get('/loginsuccess', v1.usersController.loginSuccess);
 
+  router.put('/settings', v1.usersController.settings);
   // when login failed, send failed msg
   router.get('/loginfailed', v1.usersController.loginFail);
   return router;

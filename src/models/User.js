@@ -23,6 +23,10 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
       });
     }
 
+    static async verifyJWT(token) {
+      return await jwt.verify(token, config.dev.jwt.secret);
+    }
+
     static async confirmEmail(user, token) {
       const url = `${config.dev.clienturl}/confirmation?token=${token}`;
 
@@ -101,6 +105,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      lastname: DataTypes.STRING,
       email: {
         type: DataTypes.STRING,
         unique: true,
@@ -136,7 +141,13 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
       secretToken: DataTypes.STRING,
       goal: DataTypes.INTEGER,
       reminder: DataTypes.BOOLEAN,
+      notify: DataTypes.BOOLEAN,
+      mode: DataTypes.BOOLEAN,
       remember: DataTypes.BOOLEAN,
+      height: DataTypes.STRING,
+      weight: DataTypes.STRING,
+      age: DataTypes.STRING,
+      about: DataTypes.TEXT,
     },
     {
       sequelize,

@@ -13,6 +13,7 @@ export const requireAuth = async (req, res, next) => {
     // const [_, tokenValue] = req.headers.authorization.split(' ');
 
     let token = req.cookies['access_token'];
+
     if (!token) {
       return res.status(403).send({ message: 'Token is not present' });
     }
@@ -24,10 +25,10 @@ export const requireAuth = async (req, res, next) => {
       }
     }
 
-    req.locals['userId'] = decoded.id;
     // req.locals.userId = decoded.id;
     return next();
   } catch (error) {
+    console.log(error);
     res.status(403).json(error);
   }
 };

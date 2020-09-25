@@ -68,6 +68,7 @@ const verifyCallBack = async (
 
         const newUser = await new models.User({
           username: profile.displayName,
+          email: profile.emails[0].value,
           googleEmail: profile.emails[0].value,
           confirmed: true,
           googleId: profile.id,
