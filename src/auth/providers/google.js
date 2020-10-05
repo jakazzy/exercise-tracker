@@ -74,11 +74,6 @@ const verifyCallBack = async (
           googleId: profile.id,
           isGoogleAuth: true,
         });
-        console.log(
-          '**************************************',
-          req.cookies['access_token'],
-          req.user
-        );
         await newUser.save();
         return done(null, newUser);
       }

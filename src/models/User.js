@@ -158,7 +158,7 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
       isGoogleAuth: { type: DataTypes.BOOLEAN, defaultValue: false },
       isLocalAuth: { type: DataTypes.BOOLEAN, defaultValue: false },
       hashedpassword: {
-        type: DataTypes.STRING(),
+        type: DataTypes.STRING,
         // eslint-disable-next-line max-len
         is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
       },
@@ -172,7 +172,6 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
         defaultValue: false,
       },
       secretToken: DataTypes.STRING,
-      goal: DataTypes.INTEGER,
       reminder: DataTypes.BOOLEAN,
       notify: DataTypes.BOOLEAN,
       mode: DataTypes.BOOLEAN,
@@ -181,6 +180,8 @@ export default (sequelize, Model, DataTypes, Exercise = 'Exercise') => {
       weight: DataTypes.STRING,
       age: DataTypes.STRING,
       about: DataTypes.TEXT,
+      schedule: DataTypes.ARRAY(DataTypes.JSON),
+      goal: DataTypes.ARRAY(DataTypes.JSON),
     },
     {
       sequelize,

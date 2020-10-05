@@ -386,10 +386,21 @@ export default {
 
   loginStatus: async (req, res) => {
     const token = req.cookies['access_token'];
-    res.status(200).json({
+
+    const payload = await model.User.verifyJWT(token);
+    const id = payload.id;
+
+    if (!id) {
+      return res.status(404).send({ message: 'user not found' });
+    }
+    const user = await model.User.findByPk(id);
+    console.log(user, 'this is a user');
+
+    res.status(200).send({
       isAuthenticated: true,
       message: 'user is authenticated',
       token,
+      user,
     });
   },
 
@@ -438,6 +449,58 @@ export default {
       res.status(400).send({ message: e.message });
     }
   },
+
+  updateSchedule: async (req, res) => {
+    try {
+      const token = req.cookies['access_token'];
+      const payload = await model.User.verifyJWT(token);
+      const id = payload.id;
+
+      if (!id) {
+        return res.status(404).send({ message: 'user not found' });
+      }
+      const user = await model.User.findByPk(id);
+      user.schedule = req.body;
+      const schedule = await user.save();
+      res
+        .status(201)
+        .send({ message: 'schedule updated successfully', schedule });
+    } catch (error) {
+      console.log(error);
+      res.status(400).send({ message: error.message });
+    }
+  },
+  getScheduleAndGoal: async (req, res) => {
+    try {
+      const token = req.cookies['access_token'];
+      const payload = await model.User.verifyJWT(token);
+      const id = payload.id;
+
+      if (!id) {
+        return res.status(404).send({ message: 'user not found' });
+      }
+      const user = await model.User.findByPk(id);
+
+      let schedule, goal;
+      if (user) {
+        schedule = user.schedule;
+        goal = user.goal;
+      } else {
+        throw new Error('User cannot be found');
+      }
+      res.status(200).send({
+        message: 'schedule retrived successfully',
+        schedule,
+        goal,
+        success: true,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(400).send({ message: error.message });
+    }
+  },
+  updateGoal: async (req, res) => {},
+  getGoal: async (req, res) => {},
 };
 
 // ref for reset passwor

@@ -66,5 +66,18 @@ export default (express) => {
   router.get('/loginfailed', v1.usersController.loginFail);
 
   router.post('/invitefriend', requireAuth, v1.usersController.inviteFriend);
+  router.put('/updateschedule', requireAuth, v1.usersController.updateSchedule);
+  router.get(
+    '/getscheduleandgoal',
+    requireAuth,
+    v1.usersController.getScheduleAndGoal
+  );
+  router.put('updategoal', requireAuth, v1.usersController.updateGoal);
+
+  // When logout, redirect to client
+  router.get('/signout', v1.usersController.signOut);
+
+  // check status
+  router.get('/checkstatus', requireAuth, v1.usersController.loginStatus);
   return router;
 };

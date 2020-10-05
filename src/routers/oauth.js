@@ -66,10 +66,5 @@ export default (express) => {
     })
   );
 
-  // When logout, redirect to client
-  router.get('/signout', v1.usersController.signOut);
-
-  // check status
-  router.get('/checkstatus', requireAuth, v1.usersController.loginStatus);
   return router;
 };
