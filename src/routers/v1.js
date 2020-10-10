@@ -8,24 +8,24 @@ export default (express) => {
   const router = express.Router();
 
   // exercises routes
-  router.get('/users/:id/exercises', v1.exercisesController.index);
+  router.get('/users/user/exercises', v1.exercisesController.index);
 
   router.post(
-    '/users/:id/exercises',
+    '/users/user/exercises',
     requireAuth,
     v1.exercisesController.create
   );
-  // index
-  router.get('/users/:id/exercises/:exerciseId', v1.exercisesController.show);
+  // router.get('/users/:id/exercises/:exerciseId',
+  // v1.exercisesController.show);
 
   router.put(
-    '/users/:id/exercises/:exerciseId',
+    '/users/user/exercises/:exerciseId',
     requireAuth,
     v1.exercisesController.update
   );
 
   router.delete(
-    '/users/:id/exercises/:exerciseId',
+    '/users/user/exercises/:exerciseId',
     requireAuth,
     v1.exercisesController.destroy
   );

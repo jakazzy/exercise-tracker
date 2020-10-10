@@ -1,5 +1,6 @@
 import { initModels as model } from '../../models';
 import { RecordNotFoundError } from './../../lib/errors';
+import { getUserId } from '../../lib/utils';
 
 const setUser = (id) => {
   // eslint-disable-next-line no-undef
@@ -14,12 +15,12 @@ const setUser = (id) => {
 export default {
   index: async (req, res) => {
     try {
-      const { id } = req.params;
-      const userId = parseInt(id, 10);
-      const user = await setUser(userId);
-      const items = await user.getExercises();
+      const token = req.cookies['access_token'];
+      const id = getUserId(token);
+      const user = await setUser(id);
+      const exercises = await user.getExercises();
 
-      res.status(200).send(items);
+      res.status(200).send({ exercises, message: 'retrived all exercises' });
     } catch (error) {
       res.status(404).send({ message: error.message });
     }
@@ -27,20 +28,20 @@ export default {
 
   create: async (req, res) => {
     try {
-      const { id } = req.params;
-      const userId = parseInt(id, 10);
-      const user = await setUser(userId);
-      const description = req.body.description;
-      const duration = req.body.duration;
+      const token = req.cookies['access_token'];
+      const id = getUserId(token);
+      const user = await setUser(id);
+      // const description = req.body.description;
+      // const duration = req.body.duration;
       const errors = [];
 
-      if (!description) {
-        errors.push({ message: 'Description  cannot be empty' });
-      }
+      // if (!description) {
+      //   errors.push({ message: 'Description  cannot be empty' });
+      // }
 
-      if (!duration) {
-        errors.push({ message: 'Duration  cannot be empty' });
-      }
+      // if (!duration) {
+      //   errors.push({ message: 'Duration  cannot be empty' });
+      // }
 
       if (errors.length) {
         return res.status(422).json(errors);
@@ -86,21 +87,30 @@ export default {
 
   update: async (req, res) => {
     try {
-      const { id, exerciseId } = req.params;
-      const { description, duration } = req.body;
-
-      if (!exerciseId || !id) {
-        return res.status(404).send({ message: 'Resource not found' });
-      }
-
-      const exercId = parseInt(exerciseId, 10);
+      const token = req.cookies['access_token'];
+      const id = getUserId(token);
       const user = await setUser(id);
-      const [exercise] = await user.getExercises({ where: { id: exercId } });
-      exercise.description = description;
-      exercise.duration = duration;
-      await exercise.save();
+      const exercises = await user.getExercises();
+      const exerciseId = exercises.id;
+      const userExercise = await model.Exercise.update(req.body, {
+        where: { id: exerciseId },
+      });
+      // const { id, exerciseId } = req.params;
+      // const { description, duration } = req.body;
 
-      res.status(200).send({ message: 'exercise updated successfully' });
+      // if (!exerciseId || !id) {
+      //   return res.status(404).send({ message: 'Resource not found' });
+      // }
+
+      // const [exercise] = await user.getExercises
+      // ({ where: { id: exerciseId } });
+
+      // await exercise.save();
+
+      res.status(200).send({
+        message: 'exercise updated successfully',
+        exercises: userExercise,
+      });
     } catch (e) {
       if (e.statusCode) {
         return res.status(e.statusCode).send({ message: e.message });
