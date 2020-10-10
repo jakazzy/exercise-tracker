@@ -16,7 +16,7 @@ export default {
   index: async (req, res) => {
     try {
       const token = req.cookies['access_token'];
-      const id = getUserId(token);
+      const id = await getUserId(token);
       const user = await setUser(id);
       const exercises = await user.getExercises();
 
@@ -29,7 +29,7 @@ export default {
   create: async (req, res) => {
     try {
       const token = req.cookies['access_token'];
-      const id = getUserId(token);
+      const id = await getUserId(token);
       const user = await setUser(id);
       // const description = req.body.description;
       // const duration = req.body.duration;
@@ -88,7 +88,7 @@ export default {
   update: async (req, res) => {
     try {
       const token = req.cookies['access_token'];
-      const id = getUserId(token);
+      const id = await getUserId(token);
       const user = await setUser(id);
       const exercises = await user.getExercises();
       const exerciseId = exercises.id;
@@ -110,6 +110,40 @@ export default {
       res.status(200).send({
         message: 'exercise updated successfully',
         exercises: userExercise,
+      });
+    } catch (e) {
+      if (e.statusCode) {
+        return res.status(e.statusCode).send({ message: e.message });
+      } else {
+        res.status(400).send({ message: e.message });
+      }
+    }
+  },
+
+  updateWeeklylog: async (req, res) => {
+    try {
+      const token = req.cookies['access_token'];
+      const id = await getUserId(token);
+      const user = await setUser(id);
+      const exercises = await user.getExercises();
+      exercises.weeklylog = req.body;
+      exercises.save();
+
+      // const { id, exerciseId } = req.params;
+      // const { description, duration } = req.body;
+
+      // if (!exerciseId || !id) {
+      //   return res.status(404).send({ message: 'Resource not found' });
+      // }
+
+      // const [exercise] = await user.getExercises
+      // ({ where: { id: exerciseId } });
+
+      // await exercise.save();
+
+      res.status(200).send({
+        message: 'exercise updated successfully',
+        exercises: exercises,
       });
     } catch (e) {
       if (e.statusCode) {

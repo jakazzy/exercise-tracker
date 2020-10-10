@@ -19,11 +19,16 @@ export default (express) => {
   // v1.exercisesController.show);
 
   router.put(
-    '/users/user/exercises/:exerciseId',
+    '/users/user/exercises',
     requireAuth,
     v1.exercisesController.update
   );
 
+  router.put(
+    '/users/user/exercises/weeklylog',
+    requireAuth,
+    v1.exercisesController.updateWeeklylog
+  );
   router.delete(
     '/users/user/exercises/:exerciseId',
     requireAuth,
