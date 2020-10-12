@@ -69,6 +69,15 @@ export default {
       });
 
       const savedUser = await newUser.save();
+      const userExercise = await new model.Exercise({
+        chartdata: [{}],
+        progressdata: {},
+        weeklylog: [{}],
+        prevData: 0,
+        description: '',
+        duration: 0,
+      });
+      userExercise.UserId = savedUser.id;
       const payload = { id: savedUser.id };
       const token = await model.User.generateJWT(payload);
       const { isFacebookAuth, isGoogleAuth, isLocalAuth } = savedUser;

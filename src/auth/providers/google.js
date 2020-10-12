@@ -74,7 +74,18 @@ const verifyCallBack = async (
           googleId: profile.id,
           isGoogleAuth: true,
         });
-        await newUser.save();
+
+        const userdata = await newUser.save();
+        const userExercise = await new models.Exercise({
+          chartdata: null,
+          progressdata: null,
+          weeklylog: null,
+          prevData: 0,
+          description: null,
+          duration: 0,
+        });
+        userExercise.UserId = userdata.id;
+        await userExercise.save();
         return done(null, newUser);
       }
     } else {

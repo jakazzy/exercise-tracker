@@ -48,7 +48,7 @@ export default {
       }
 
       let savedExercise = await user.createExercise(req.body);
-
+      console.log(savedExercise, 'this is exercise');
       return res.status(201).send({
         message: 'successfully added',
         exercise: savedExercise,
@@ -125,7 +125,15 @@ export default {
       const token = req.cookies['access_token'];
       const id = await getUserId(token);
       const user = await setUser(id);
-      const exercises = await user.getExercises();
+      // const exercises = await user.getExercises();
+      const exercises = await model.Exercise.findOne({
+        where: { UserId: user.id },
+      });
+      // console.log(
+      //   exercises,
+      //   user,
+      //   '-------------------------------------------'
+      // );
       exercises.weeklylog = req.body;
       exercises.save();
 
@@ -146,6 +154,7 @@ export default {
         exercises: exercises,
       });
     } catch (e) {
+      console.log(e, '-------------------------------------------');
       if (e.statusCode) {
         return res.status(e.statusCode).send({ message: e.message });
       } else {

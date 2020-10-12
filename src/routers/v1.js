@@ -15,6 +15,7 @@ export default (express) => {
     requireAuth,
     v1.exercisesController.create
   );
+
   // router.get('/users/:id/exercises/:exerciseId',
   // v1.exercisesController.show);
 

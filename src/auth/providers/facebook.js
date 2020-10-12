@@ -77,7 +77,16 @@ const verifyCallBack = async (
           isFacebookAuth: true,
         });
 
-        await newUser.save();
+        const userdata = await newUser.save();
+        const userExercise = await new models.Exercise({
+          chartdata: [{}],
+          progressdata: {},
+          weeklylog: [{}],
+          prevData: 0,
+          description: '',
+          duration: 0,
+        });
+        userExercise.UserId = userdata.id;
         return done(null, newUser);
       }
     } else {
