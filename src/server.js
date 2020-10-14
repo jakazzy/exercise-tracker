@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import passport from 'passport';
 
 import routers from './routers';
+import { WorkoutReminders } from './jobs/workout-reminder';
 import DB from './config/sequelize';
 import { uninitModels, initModels } from './models';
 
@@ -41,6 +42,7 @@ import { uninitModels, initModels } from './models';
     })
   );
 
+  WorkoutReminders();
   app.use(passport.initialize());
   // app.use(passport.session());
   app.use('/api/v1', routers.oauthRouter(express));
