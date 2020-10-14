@@ -27,7 +27,7 @@
     "@babel/core": "^7.9.0",
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.9.5",
-    "bcrypt": "^4.0.1",
+    "bcrypt": "^5.0.0",
     "cookie-parser": "1.4.5",
     "cors": "2.8.5",
     "crypto-random-string": "3.2.0",
